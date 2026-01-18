@@ -20,7 +20,8 @@ My credentials are:
 - Certified ScrumMaster
 - Google Project Management
 - Google AI Essentials
-- Bachelors of Science, Business Administration, IT Management
+- Bachelors of Science, Business Administration, IT Management (complete)
+- Masters of Science, Data Analytics, Data Science (enrolled)
 
 My Technical skills include:
 - Coding languages: C++, Python, SQL
