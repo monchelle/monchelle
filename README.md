@@ -25,7 +25,7 @@ My credentials are:
 
 My Technical skills include:
 - Coding languages: C++, Python, SQL
-- Data Visualization: PowerBI, Tableau, Looker Studio
+- Data Visualization: PowerBI, Tableau, Looker Studio, Jupyter Notebooks, Visual Studio Code
 - Cloud, AI, and Infrastructure: AWS, Copilot, ChatGPT, Gemini
 - CRM & Collaboration Platforms: SharePoint, Salesforce Lightning
 - Project & Work Management: Asana, Jira, Confluence, Microsoft Project, Smartsheet
