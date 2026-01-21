@@ -32,6 +32,25 @@ My Technical skills include:
 - Workforce Management: Genesys, Verint
 - Productivity: Microsoft Office, Google Workspace, Adobe Creative Cloud
 
+# Data Analytics & Customer Experience Portfolio
+
+This repository showcases selected projects that combine data analysis, customer experience strategy, and operational leadership.
+
+## Projects
+
+- **B2B Happy Customer Score (HCS) Dashboard**  
+  Weekly CX performance dashboards for IKEA for Business B2B queues, with coaching insights for team leaders.  
+  Folder: [`b2b-hcs-dashboard/`](./b2b-hcs-dashboard)
+
+- **GreenTrail Outdoors – Promotion Effectiveness Analysis**  
+  End-to-end analysis of promotional performance, including lift calculations, correlation analysis, and test design recommendations.  
+  Folder: [`greentrail-promo-analysis/`](./greentrail-promo-analysis)
+
+- **Python Learning & Practice**  
+  Selected Python scripts from my learning journey, focused on data manipulation, logic, and problem solving.  
+  Folder: [`python-learning/`](./python-learning)
+
+
 
 <!---
 monchelle/monchelle is a ✨ special ✨ repository because its `README.md` (this file) appears on your GitHub profile.
