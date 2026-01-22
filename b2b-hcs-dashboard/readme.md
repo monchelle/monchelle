@@ -1,6 +1,7 @@
 # B2B Happy Customer Score (HCS) Dashboard
 
 This project summarizes weekly customer satisfaction performance for IKEA for Business B2B queues (chat, voice, resolutions, and sales). I designed and led this initiative to align four team leaders around a shared view of customer experience and coaching priorities.
+**Note: All data has been anonymized and is here for illustration purposes only.
 
 ## Objectives
 - Track Happy Customer Score (HCS) by channel and coworker
