@@ -39,7 +39,7 @@ This repository showcases selected projects that combine data analysis, customer
 ## Projects
 
 - **B2B Happy Customer Score (HCS) Dashboard**  
-  Weekly CX performance dashboards for IKEA for Business B2B queues, with coaching insights for team leaders.  
+  Weekly CX performance dashboards for B2B Sales & Service inbound queues, with coaching insights for team leaders.  
   Folder: [`b2b-hcs-dashboard/`](./b2b-hcs-dashboard)
 
 - **GreenTrail Outdoors – Promotion Effectiveness Analysis**  
