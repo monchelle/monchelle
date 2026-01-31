@@ -50,6 +50,10 @@ This repository showcases selected projects that combine data analysis, customer
   Selected Python scripts from my learning journey, focused on data manipulation, logic, and problem solving.  
   Folder: [`python-learning/`](./python-learning)
 
+- **Grad School Plan**  
+  Master's Degree in Data Science: 7-month plan from research to program completion.  
+  Folder: [`grad-school-plan/`](./grad-school-plan)
+
 - **Tata Data Visualization: Empowering Business with Effective Insights**   
   Delivered insights and a presentation script for CEO/CMO decision‑making.
   Folder: [`tata-data-visualization/`](./tata-data-visualization)
