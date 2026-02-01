@@ -53,7 +53,7 @@ This repository showcases selected projects that combine data analysis, customer
 
 - **SQL Learning & Practice**  
   Selected SQL scripts from my learning journey, focused on data manipulation, logic, and problem solving.  
-  Folder: 
+  Folder: [`sql-learning/`](./sql-learning)
   
 - **Grad School Plan**  
   Master's Degree in Data Science: 7-month plan from research to program completion.  
