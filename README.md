@@ -25,7 +25,7 @@ My credentials are:
 
 My Technical skills include:
 - Coding languages: C++, Python, SQL
-- DBMS: SQLite, PostgreSQL, phpMyAdmin, MySQL, MS Access
+- DBMS: DB Browser, PostgreSQL, phpMyAdmin, MS Access
 - Data Visualization: PowerBI, Tableau, Looker Studio, Jupyter Notebooks, Visual Studio Code
 - Cloud, AI, and Infrastructure: AWS, Copilot, ChatGPT, Gemini
 - CRM & Collaboration Platforms: SharePoint, Salesforce Lightning
