@@ -33,6 +33,10 @@ My Technical skills include:
 - Workforce Management: Genesys, Verint
 - Productivity: Microsoft Office, Google Workspace, Adobe Creative Cloud
 
+## 🌱 Personal Mission
+
+I am committed to advancing ethical data science through rigorous analysis, transparent communication, and a focus on meaningful social impact. My work centers on bridging the gap between technical innovation and real‑world change by developing data‑driven strategies that support marginalized communities and expand access to education and opportunity.
+
 # Data Analytics & Customer Experience Portfolio
 
 This repository showcases selected projects that combine data analysis, customer experience strategy, and operational leadership.
