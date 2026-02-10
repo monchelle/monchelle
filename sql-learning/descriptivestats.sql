@@ -8,7 +8,7 @@ Which product had the most success throughout all of last year?
 Did either product fluctuate greatly each month or what the month-to-month fairly consistent?
 
 Calculate the minimum, maximum, average, and standard deviation of monthly revenue for each product for the year 2022.
-This will equip leadership with a quick summary of the revenue and consistency that each product prodvided last year. */
+This will equip leadership with a quick summary of the revenue and consistency that each product provided last year. */
 
 WITH monthly_revenue AS
     (SELECT
@@ -34,4 +34,5 @@ FROM
     monthly_revenue
 
 GROUP BY
+
 	ProductName
