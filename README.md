@@ -68,6 +68,10 @@ This repository showcases selected projects that combine data analysis, customer
   Delivered insights and a presentation script for CEO/CMO decision‑making.  
   Folder: [`tata-data-visualization/`](./tata-data-visualization)
 
+- **Environmental Impact Analysis**   
+  Utilized Python and Tableau to follow the six steps of data preparation and create visualization for public use.  
+  Folder: [`environmental-impact-analysis/`](./environmental-impact-analysis)
+
 
 <!---
 monchelle/monchelle is a ✨ special ✨ repository because its `README.md` (this file) appears on your GitHub profile.
