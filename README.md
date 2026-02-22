@@ -42,7 +42,10 @@ I am committed to advancing ethical data science through rigorous analysis, tran
 This repository showcases selected projects that combine data analysis, customer experience strategy, and operational leadership.
 
 ## Projects
-
+- **Environmental Impact Analysis**   
+  Utilized Python and Tableau to follow the six steps of data preparation and create visualization for public use.  
+  Folder: [`environmental-impact-analysis/`](./environmental-impact-analysis)
+  
 - **B2B Happy Customer Score (HCS) Dashboard**  
   Weekly CX performance dashboards for B2B Sales & Service inbound queues, with coaching insights for team leaders.  
   Folder: [`b2b-hcs-dashboard/`](./b2b-hcs-dashboard)
@@ -68,9 +71,7 @@ This repository showcases selected projects that combine data analysis, customer
   Delivered insights and a presentation script for CEO/CMO decision‑making.  
   Folder: [`tata-data-visualization/`](./tata-data-visualization)
 
-- **Environmental Impact Analysis**   
-  Utilized Python and Tableau to follow the six steps of data preparation and create visualization for public use.  
-  Folder: [`environmental-impact-analysis/`](./environmental-impact-analysis)
+
 
 
 <!---
