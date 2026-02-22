@@ -4,7 +4,7 @@
 - 💞️ I’m looking to collaborate on any projects which will build my expeirence and knowledge on project management and data analytics.
 - 📫 How to reach me: PM me here or find me on LinkedIn at www.linkedin.com/in/monchelledavis/ 
 - 😄 Pronouns: she/her
-- ⚡ Fun fact: as a child, I used to participate in pagents.
+- ⚡ Fun fact: as a child, I used to participate in beauty pageants.
 
 Some of my experience includes:
 - Team Leader, B2B Operations - 5 years
