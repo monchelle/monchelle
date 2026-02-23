@@ -18,8 +18,6 @@ The goal is to create a **public, accessible, data‑driven narrative** that hig
 - How do maternal mortality rates differ by race in the United States?
 - How has Black maternal mortality changed over time?
 - Which states show the highest disparities?
-- How does life expectancy for Black Americans compare to other racial groups?
-- What structural inequities contribute to these outcomes?
 
 ---
 
@@ -40,12 +38,10 @@ This project uses publicly available, authoritative datasets:
 - Life expectancy by race and gender  
 - Historical trends  
 
-### **KFF Health Disparities Data (Optional Enhancements)**
-- Access to care  
-- Insurance coverage  
-- Chronic disease prevalence  
+### **US Census Bureau**
+- Poverty rates by year and race
 
-All raw data files are stored in the `/data/raw/` directory, and cleaned, analysis‑ready files are stored in `/data/clean/`.
+All  data files are stored in the `/data/` directory.
 
 ---
 
@@ -72,21 +68,12 @@ The full cleaning notebook is available in:
 
 The interactive dashboard visualizes:
 
-### **1. The Cost of Being Black While Giving Birth**
+### **The Cost of Being Black While Giving Birth**
 - Maternal mortality rates by race  
 - Trend lines from 1999–2022  
 - State‑level disparities  
 - Crude vs. age‑adjusted rates  
 
-### **2. Life Expectancy Gaps**
-- Black vs. white life expectancy over time  
-- Gender‑specific trends  
-- State‑level life expectancy maps  
-
-### **3. Structural Health Inequities**
-- Access to care indicators  
-- Chronic disease prevalence  
-- Environmental and socioeconomic factors  
 
 **View the live dashboard:**  
 👉 [Here](https://public.tableau.com/app/profile/monchelle.davis/viz/USMMRStudy/Dashboard1)
