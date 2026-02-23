@@ -42,6 +42,10 @@ I am committed to advancing ethical data science through rigorous analysis, tran
 This repository showcases selected projects that combine data analysis, customer experience strategy, and operational leadership.
 
 ## Projects
+- **U.S. Maternal Mortality Analysis** <br>
+  Utilized Python and Tableau to follow the six steps of data preparation and create visualization for public use based on data from the CDC concerning racial disparities in maternal health care. <br>
+  Folder: [`maternal-mortality/`](./maternal-mortality) 
+
 - **Environmental Impact Analysis**   
   Utilized Python and Tableau to follow the six steps of data preparation and create visualization for public use.  
   Folder: [`environmental-impact-analysis/`](./environmental-impact-analysis)
