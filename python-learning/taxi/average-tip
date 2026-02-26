@@ -1,5 +1,6 @@
 """
 - Load the taxi data.
+- Taxi data is found at: https://github.com/anish749/nyc-tlc-minh/blob/master/data/yellow_tripdata_2016-01.csv
 - Remove all rows with either total_amount <= 0 or
   passenger_count == 0
 - Create a bar chart of average tip % per passenger_count
