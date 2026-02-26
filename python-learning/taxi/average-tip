@@ -1,0 +1,36 @@
+"""
+- Load the taxi data.
+- Remove all rows with either total_amount <= 0 or
+  passenger_count == 0
+- Create a bar chart of average tip % per passenger_count
+- Create a bar chart of average tip % per day of week
+"""
+
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Load the taxi data
+tdf = pd.read_csv('taxi.csv')
+
+# Remove all rows with either total_amount <= 0 or passenger_count == 0
+tdf = tdf[(tdf['total_amount'] > 0) & (tdf['passenger_count'] > 0)]
+
+# Create a bar chart of average tip % per passenger_count
+fig = plt.figure(figsize=(10, 5)) # Create a figure to hold the subplots
+ax = fig.add_subplot(1, 2, 1)
+
+tdf['tip_pct'] = tdf['tip_amount'] / tdf['total_amount'] # Calculate average tip amount
+tdf.groupby('passenger_count')['tip_pct'].mean().plot.bar(ax=ax) # Group by passenger_count
+ax.set_title('Average Tip % per Passenger Count')
+ax.set_xlabel('Passenger Count')
+ax.set_ylabel('Average Tip %')
+
+# Create a bar chart of average tip % per day of week
+tdf['day_of_week'] = pd.to_datetime(tdf['tpep_pickup_datetime']).dt.day_name() # Extract the day of week from the pickup datetime
+
+plt.bar(tdf.groupby('day_of_week')['tip_pct'].mean().index, 
+        tdf.groupby('day_of_week')['tip_pct'].mean())
+plt.title('Average Tip % per Day of Week')
+plt.xlabel('Day of Week')
+plt.ylabel('Average Tip %')
+plt.show()
