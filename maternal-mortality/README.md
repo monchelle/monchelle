@@ -18,6 +18,7 @@ The goal is to create a **public, accessible, data‑driven narrative** that hig
 - How do maternal mortality rates differ by race in the United States?
 - How has Black maternal mortality changed over time?
 - Which states show the highest disparities?
+- Is there any link between poverty rates and maternal mortality rates?
 
 ---
 
@@ -59,7 +60,22 @@ The cleaning workflow includes:
 
 The full cleaning notebook is available in:
 
-/notebooks/data_cleaning.ipynb
+/notebooks/inspect-and-clean.ipynb
+
+The exploration workflow includes:
+
+- Various preliminary visualizations of maternal mortality
+- Various preliminary visualizations of povery rates
+- Manipulation of both datasets to join them
+- Examination of the correlations between race, poverty rates, and maternal mortality
+
+The full exploration notebook is available in:
+
+/notebooks/explore.ipynb
+
+Images of the visualizations are found in:
+
+/data/images
 
 
 ---
