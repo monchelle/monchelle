@@ -76,7 +76,23 @@ The full exploration notebook is available in:
 
 Images of the visualizations are found in:
 
-/data/images
+/data/images/
+
+The forecasting workflow includes:
+
+- Loading and filtering the data set
+- Creating a subset of the data to be used in the prediction model
+- Testing a polynomial regression model and exporting predictions to a csv
+- Testing a linear regression model and exporting predictions to a csv
+
+The full forecasting notebook is available in:
+
+/notebooks/forecast.ipynb
+
+Raw prediction data is available in:
+
+/data/mmr_linear_forecast.csv
+/data/mmr_polynomial_forecast.csv
 
 
 ---
@@ -131,9 +147,10 @@ project-root/ <br>
 
 - Public health data analysis  
 - Python data cleaning (pandas, NumPy)  
-- Exploratory data analysis  
+- Exploratory data analysis (Seaborn, Matplotlib)
+- Predictive data modeling (scikit-learn)
 - Tableau dashboard design  
-- Data storytelling  
+- Data storytelling
 - Reproducible project structure  
 - Working with federal mortality datasets  
 - Communicating complex inequities through data  
