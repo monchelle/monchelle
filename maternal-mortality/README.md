@@ -19,6 +19,7 @@ The goal is to create a **public, accessible, data‑driven narrative** that hig
 - How has Black maternal mortality changed over time?
 - Which states show the highest disparities?
 - Is there any link between poverty rates and maternal mortality rates?
+- What does the future of maternal mortality look like?
 
 ---
 
@@ -100,16 +101,26 @@ The interactive dashboard visualizes:
 project-root/ <br>
 │<br>
 ├── data/ <br>
-│        ├── Underlying Cause of Death, 1999-2020.csv <br>
-│        └── maternal_mortality_cleaned.csv<br>
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── Underlying Cause of Death, 1999-2020.csv <br>
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── poverty-rates.csv <br>
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── cleaned_maternal_mortality.csv<br>
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── mmr_linear_forecast.csv<br>
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── mmr_polynomial_forecast.csv<br>
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── images/<br>
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── mmr-by-state.png<br>
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── poverty-rate-by-race.png<br>
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── scatterplot-mmr-poverty-race.png<br>
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── scatterplot-mmr-poverty.png<br>
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── trendline-by-race.png<br>
 │<br>
 ├── notebooks/<br>
-│   └── inspect-and-clean.ipynb<br>
-│   └── explore.ipynb<br>
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── inspect-and-clean.ipynb<br>
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── explore.ipynb<br>
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── forecast.ipynb<br>
 │<br>
 ├── tableau/<br>
-│   ├── dashboard_images/<br>
-│   └── dashboard.twb<br>
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── dashboard_images/<br>
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── dashboard.twb<br>
 │<br>
 └── README.md<br>
 
