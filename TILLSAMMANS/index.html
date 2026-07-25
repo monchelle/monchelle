@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TILLSAMMANS: Peer Enablement & Support Blueprint</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- ECharts -->
+    <script src="https://g.alicdn.com/code/lib/echarts/5.4.3/echarts.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        ikeaBlue: '#0058a3',
+                        ikeaYellow: '#ffdb00',
+                        ikeaDarkBlue: '#003580',
+                        ikeaLightGray: '#f4f4f4',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght=300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Noto Sans', sans-serif;
+            background-color: #f8fafc;
+        }
+    </style>
+</head>
+<body class="text-slate-800">
+
+    <!-- TOP NAVIGATION / BRANDING HEADER -->
+    <header class="bg-ikeaBlue text-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="bg-ikeaYellow text-ikeaBlue font-black text-xl px-4 py-1.5 rounded-sm tracking-tighter transform skew-x-3">
+                    IKEA
+                </div>
+                <div class="h-6 w-px bg-blue-400 hidden sm:block"></div>
+                <span class="text-sm tracking-wider font-semibold uppercase hidden sm:inline-block">Remote Customer Meeting Point - Baltimore</span>
+            </div>
+            <div class="flex items-center space-x-2 text-xs font-medium">
+                <span class="bg-blue-800 px-3 py-1 rounded-full text-blue-100">Role: Remote Team Leader</span>
+                <span class="bg-ikeaYellow text-ikeaBlue px-3 py-1 rounded-full font-bold">Peer Enablement Initiative</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section class="bg-gradient-to-r from-ikeaDarkBlue to-ikeaBlue text-white py-12 px-4 shadow-inner relative overflow-hidden">
+        <!-- Abstract geometric decoration to give IKEA look -->
+        <div class="absolute right-0 bottom-0 opacity-10 pointer-events-none transform translate-y-12 translate-x-12">
+            <svg width="400" height="400" viewBox="0 0 100 100" fill="currentColor">
+                <circle cx="50" cy="50" r="40" />
+            </svg>
+        </div>
+
+        <div class="max-w-6xl mx-auto text-center relative z-10">
+            <div class="inline-block bg-ikeaYellow/10 text-ikeaYellow text-xs font-semibold px-4 py-1.5 rounded-full uppercase tracking-widest mb-4 border border-ikeaYellow/30">
+                Co-worker & Business Alignment Plan
+            </div>
+            <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight mb-4">
+                TILLSAMMANS (Together)
+            </h1>
+            <p class="text-lg md:text-xl text-blue-100 max-w-3xl mx-auto font-light leading-relaxed">
+                An enablement and guidance framework designed by a <strong class="text-white font-semibold">Remote Team Leader</strong> to coach, align, and support peer leaders across Baltimore's <strong class="text-ikeaYellow font-semibold">Kitchen Planning</strong> and <strong class="text-ikeaYellow font-semibold">Kitchen Phones</strong> teams.
+            </p>
+            <div class="mt-8 flex flex-wrap justify-center gap-4">
+                <a href="#approach" class="bg-ikeaYellow text-ikeaDarkBlue hover:bg-yellow-400 font-bold px-6 py-3 rounded-lg shadow-md transition-all transform hover:-translate-y-0.5 text-sm md:text-base">
+                    Explore Our Approach
+                </a>
+                <a href="#support-menu" class="bg-white/10 hover:bg-white/20 text-white font-semibold px-6 py-3 rounded-lg border border-white/20 transition-all text-sm md:text-base">
+                    View Support Offerings
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- INTRO & IKEA VALUES CARDS -->
+    <main class="max-w-7xl mx-auto px-4 py-10">
+
+        <!-- INTRODUCING THE MISSION -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+            <div class="lg:col-span-2 bg-white rounded-2xl p-8 shadow-sm border border-slate-100 flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <span class="w-2 h-6 bg-ikeaBlue rounded-full"></span>
+                        <h2 class="text-2xl font-bold text-slate-800">The Purpose of This Plan</h2>
+                    </div>
+                    <p class="text-slate-600 mb-4 leading-relaxed">
+                        To drive business uplift in the Baltimore area, we are establishing a peer support structure based on <strong>enablement, guidance, and strategic backup</strong>. Rather than taking over daily tasks, this plan focuses on helping peer leaders build more effective and efficient ways of working, providing professional coaching advice, and offering reliable operational relief during peak projects or planned PTO.
+                    </p>
+                    <p class="text-slate-600 mb-6 leading-relaxed">
+                        By working <strong>Tillsammans (Together)</strong>, we can align performance standards across Kitchen Planning and Kitchen Phones, share best practices, and build a more resilient frontline leadership tier.
+                    </p>
+                </div>
+                <div class="bg-blue-50 border-l-4 border-ikeaBlue p-4 rounded-r-lg">
+                    <p class="text-xs text-ikeaDarkBlue font-semibold uppercase tracking-wider mb-1">Our Leadership Philosophy</p>
+                    <p class="text-sm text-slate-700 italic">"We lead by example. We look for ways to simplify, streamline, and empower our fellow co-workers to be at their absolute best." — IKEA Culture & Values</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl p-8 shadow-sm border border-slate-100">
+                <h3 class="text-lg font-bold text-slate-800 mb-6 flex items-center justify-between">
+                    <span>Guided by IKEA Values</span>
+                    <span class="text-xs text-slate-400 font-normal">Core Pillars</span>
+                </h3>
+                <div class="space-y-4">
+                    <div class="flex items-start space-x-3">
+                        <div class="bg-amber-100 text-amber-700 p-2 rounded-lg font-bold text-xs mt-0.5">TG</div>
+                        <div>
+                            <h4 class="font-bold text-sm text-slate-800">Togetherness</h4>
+                            <p class="text-xs text-slate-500">Aligning remote workflows so that Kitchen Planning and Phones work as one seamless customer journey.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <div class="bg-green-100 text-green-700 p-2 rounded-lg font-bold text-xs mt-0.5">SP</div>
+                        <div>
+                            <h4 class="font-bold text-sm text-slate-800">Simplicity</h4>
+                            <p class="text-xs text-slate-500">Helping peers eliminate manual administrative friction through efficient ways of working.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <div class="bg-blue-100 text-blue-700 p-2 rounded-lg font-bold text-xs mt-0.5">LE</div>
+                        <div>
+                            <h4 class="font-bold text-sm text-slate-800">Lead by Example</h4>
+                            <p class="text-xs text-slate-500">Modeling standard coaching procedures and acting as a trusted operational advisory partner.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <div class="bg-purple-100 text-purple-700 p-2 rounded-lg font-bold text-xs mt-0.5">RI</div>
+                        <div>
+                            <h4 class="font-bold text-sm text-slate-800">Renew & Improve</h4>
+                            <p class="text-xs text-slate-500">Introducing streamlined reporting, cross-training, and calibrated QA review systems.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- APPROACH SECTION (INFOGRAPHIC ROADMAP) -->
+        <section id="approach" class="mb-16 scroll-mt-20">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-bold text-slate-800 tracking-tight">The 3-Phase Peer Alignment Roadmap</h2>
+                <p class="text-slate-500 max-w-xl mx-auto mt-2">A structured approach to uncovering individual challenges, aligning standards, and delivering strategic support.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
+                <!-- Decorative Connecting Line for desktop -->
+                <div class="absolute top-1/2 left-4 right-4 h-1 bg-slate-100 -translate-y-1/2 z-0 hidden md:block"></div>
+
+                <!-- Step 1 -->
+                <div class="bg-white rounded-xl p-6 shadow-sm border border-slate-150 z-10 relative flex flex-col justify-between hover:shadow-md transition-shadow">
+                    <div>
+                        <div class="w-12 h-12 rounded-full bg-ikeaYellow text-ikeaBlue font-black text-xl flex items-center justify-center mb-4 shadow-sm border border-yellow-300">
+                            1
+                        </div>
+                        <span class="bg-blue-50 text-ikeaBlue text-xs font-semibold px-2.5 py-1 rounded-full uppercase tracking-wider">Phase 1: Discover & Listen</span>
+                        <h3 class="text-xl font-bold text-slate-800 mt-3 mb-2">Identify Challenges & Strengths</h3>
+                        <p class="text-sm text-slate-500 leading-relaxed">
+                            Conduct friendly 1-on-1 virtual chats ("Fika") to uncover what each leader defines as their greatest strengths and operational challenges. Build a safe space for collaborative problem-solving.
+                        </p>
+                        <ul class="mt-4 space-y-2 text-xs text-slate-600">
+                            <li class="flex items-center"><span class="w-1.5 h-1.5 bg-ikeaYellow rounded-full mr-2"></span> Listen to current pain points & software friction</li>
+                            <li class="flex items-center"><span class="w-1.5 h-1.5 bg-ikeaYellow rounded-full mr-2"></span> Map out team-specific strengths and expertise</li>
+                            <li class="flex items-center"><span class="w-1.5 h-1.5 bg-ikeaYellow rounded-full mr-2"></span> Identify areas for shared ways of working</li>
+                        </ul>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-100 text-xs text-slate-400 italic">
+                        Philosophy: Mutual Respect & Simplicity
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="bg-white rounded-xl p-6 shadow-sm border border-slate-150 z-10 relative flex flex-col justify-between hover:shadow-md transition-shadow">
+                    <div>
+                        <div class="w-12 h-12 rounded-full bg-ikeaBlue text-white font-black text-xl flex items-center justify-center mb-4 shadow-sm">
+                            2
+                        </div>
+                        <span class="bg-yellow-50 text-yellow-700 text-xs font-semibold px-2.5 py-1 rounded-full uppercase tracking-wider">Phase 2: Coach & Align</span>
+                        <h3 class="text-xl font-bold text-slate-800 mt-3 mb-2">Build Guidance Toolkits</h3>
+                        <p class="text-sm text-slate-500 leading-relaxed">
+                            Formulate standardized guides for effective remote management. Introduce calibrated coaching methodologies, template-driven team meetings, and streamlined workflows.
+                        </p>
+                        <ul class="mt-4 space-y-2 text-xs text-slate-600">
+                            <li class="flex items-center"><span class="w-1.5 h-1.5 bg-ikeaBlue rounded-full mr-2"></span> Design meeting templates & QA checklists</li>
+                            <li class="flex items-center"><span class="w-1.5 h-1.5 bg-ikeaBlue rounded-full mr-2"></span> Align on corrective action guidelines</li>
+                            <li class="flex items-center"><span class="w-1.5 h-1.5 bg-ikeaBlue rounded-full mr-2"></span> Co-develop efficient administrative trackers</li>
+                        </ul>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-100 text-xs text-slate-400 italic">
+                        Philosophy: Lead by Example
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="bg-white rounded-xl p-6 shadow-sm border border-slate-150 z-10 relative flex flex-col justify-between hover:shadow-md transition-shadow">
+                    <div>
+                        <div class="w-12 h-12 rounded-full bg-emerald-600 text-white font-black text-xl flex items-center justify-center mb-4 shadow-sm">
+                            3
+                        </div>
+                        <span class="bg-emerald-50 text-emerald-700 text-xs font-semibold px-2.5 py-1 rounded-full uppercase tracking-wider">Phase 3: Support & Cover</span>
+                        <h3 class="text-xl font-bold text-slate-800 mt-3 mb-2">Contingent Backup & Advisory</h3>
+                        <p class="text-sm text-slate-500 leading-relaxed">
+                            Stand ready as a peer advisor for complex HR situations, co-facilitating calibrations, and stepping in to handle critical payroll/PTO coverage during peer vacations or heavy projects.
+                        </p>
+                        <ul class="mt-4 space-y-2 text-xs text-slate-600">
+                            <li class="flex items-center"><span class="w-1.5 h-1.5 bg-emerald-500 rounded-full mr-2"></span> Act as a sounding board for tough coaching calls</li>
+                            <li class="flex items-center"><span class="w-1.5 h-1.5 bg-emerald-500 rounded-full mr-2"></span> Provide admin coverage during planned PTO</li>
+                            <li class="flex items-center"><span class="w-1.5 h-1.5 bg-emerald-500 rounded-full mr-2"></span> Absorb extra load during peak business projects</li>
+                        </ul>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-100 text-xs text-slate-400 italic">
+                        Philosophy: Togetherness & Trust
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- THE SUPPORT MENU (4 PILLARS) -->
+        <section id="support-menu" class="mb-16 scroll-mt-20">
+            <div class="bg-slate-900 text-white rounded-2xl p-8 shadow-lg overflow-hidden relative">
+                <!-- Yellow highlight border top -->
+                <div class="absolute top-0 left-0 right-0 h-1.5 bg-ikeaYellow"></div>
+
+                <div class="flex flex-col md:flex-row md:items-center justify-between mb-8">
+                    <div>
+                        <h2 class="text-2xl md:text-3xl font-bold">The Peer Enablement & Support Menu</h2>
+                        <p class="text-slate-400 text-sm mt-1">Four operational pillars aimed at improving efficiency, sharing best practices, and providing backup coverage when needed.</p>
+                    </div>
+                    <div class="mt-4 md:mt-0 bg-slate-800 text-xs px-4 py-2 rounded-lg border border-slate-700">
+                        <strong class="text-ikeaYellow">Focus Channels:</strong> Kitchen Planning & Kitchen Phones
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                    <!-- PILLAR 1 -->
+                    <div class="bg-slate-800/80 rounded-xl p-6 border border-slate-700 hover:border-ikeaYellow/40 transition-colors flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="bg-blue-900/60 text-blue-300 text-xs font-semibold px-3 py-1 rounded-full border border-blue-800/50">Admin & Operations</span>
+                                <span class="text-xs text-slate-400">Efficiency & Coverage</span>
+                            </div>
+                            <h3 class="text-lg font-bold text-white mb-2">Payroll & PTO Process Streamlining</h3>
+                            <p class="text-slate-300 text-sm leading-relaxed mb-4">
+                                Help peers discover more efficient ways of managing Kronos timecard inputs and tracking attendance schedules. Rather than taking over their weekly admin, I provide advice on workflow simplification and stand ready to handle payroll and PTO approvals during their vacations or major system rollouts.
+                            </p>
+                        </div>
+                        <div class="bg-slate-900/50 p-3 rounded-lg border border-slate-800">
+                            <span class="text-xs text-slate-400 block font-semibold uppercase tracking-wider mb-1">Our Approach:</span>
+                            <span class="text-xs text-slate-300">Consult on efficient tracking tools and step in as full administrative backup during peer PTO.</span>
+                        </div>
+                    </div>
+
+                    <!-- PILLAR 2 -->
+                    <div class="bg-slate-800/80 rounded-xl p-6 border border-slate-700 hover:border-ikeaYellow/40 transition-colors flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="bg-amber-950/60 text-amber-300 text-xs font-semibold px-3 py-1 rounded-full border border-amber-800/50">People & Performance</span>
+                                <span class="text-xs text-slate-400">Coaching the Coach</span>
+                            </div>
+                            <h3 class="text-lg font-bold text-white mb-2">Coaching Guidance & Corrective Dialogues</h3>
+                            <p class="text-slate-300 text-sm leading-relaxed mb-4">
+                                Offer constructive guidance on preparing for impactful 1-on-1 conversations and structured developmental reviews. Act as an advisory sounding board for peers when drafting objective corrective actions, ensuring consistency in HR practices across Baltimore remote teams.
+                            </p>
+                        </div>
+                        <div class="bg-slate-900/50 p-3 rounded-lg border border-slate-800">
+                            <span class="text-xs text-slate-400 block font-semibold uppercase tracking-wider mb-1">Our Approach:</span>
+                            <span class="text-xs text-slate-300">Share frameworks for positive coaching, review drafts for compliance, and provide moral support.</span>
+                        </div>
+                    </div>
+
+                    <!-- PILLAR 3 -->
+                    <div class="bg-slate-800/80 rounded-xl p-6 border border-slate-700 hover:border-ikeaYellow/40 transition-colors flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="bg-emerald-950/60 text-emerald-300 text-xs font-semibold px-3 py-1 rounded-full border border-emerald-800/50">Culture & Motivation</span>
+                                <span class="text-xs text-slate-400">Interactive Templates</span>
+                            </div>
+                            <h3 class="text-lg font-bold text-white mb-2">Effective Meeting Design & Co-Facilitation</h3>
+                            <p class="text-slate-300 text-sm leading-relaxed mb-4">
+                                Share high-energy meeting frameworks, standard remote slide decks, and engaging agenda templates to help peers save preparation time. Act as a co-facilitator or guest speaker to model highly interactive meeting formats focused on Kitchen Planning metrics.
+                            </p>
+                        </div>
+                        <div class="bg-slate-900/50 p-3 rounded-lg border border-slate-800">
+                            <span class="text-xs text-slate-400 block font-semibold uppercase tracking-wider mb-1">Our Approach:</span>
+                            <span class="text-xs text-slate-300">Equip peers with dynamic templates; step in to run meetings when they face heavy local workloads.</span>
+                        </div>
+                    </div>
+
+                    <!-- PILLAR 4 -->
+                    <div class="bg-slate-800/80 rounded-xl p-6 border border-slate-700 hover:border-ikeaYellow/40 transition-colors flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="bg-indigo-950/60 text-indigo-300 text-xs font-semibold px-3 py-1 rounded-full border border-indigo-800/50">Quality & Business Metrics</span>
+                                <span class="text-xs text-slate-400">Calibration & Workflow Advice</span>
+                            </div>
+                            <h3 class="text-lg font-bold text-white mb-2">QA Contact Quality & Calibration Support</h3>
+                            <p class="text-slate-300 text-sm leading-relaxed mb-4">
+                                Help peers streamline their customer contact auditing methods (QA) to make it more time-effective. Host bi-weekly calibration sessions to align phone and email planning review standards, ensuring a unified customer experience.
+                            </p>
+                        </div>
+                        <div class="bg-slate-900/50 p-3 rounded-lg border border-slate-800">
+                            <span class="text-xs text-slate-400 block font-semibold uppercase tracking-wider mb-1">Our Approach:</span>
+                            <span class="text-xs text-slate-300">Share time-saving QA checklists, lead calibration alignments, and help analyze macro quality patterns.</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- DATA VISUALIZATION SECTION -->
+        <section class="mb-16 bg-white rounded-2xl p-8 shadow-sm border border-slate-100">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+
+                <!-- Left: Text Explaining KPIs and Target Allocation -->
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <span class="w-2 h-6 bg-ikeaYellow rounded-full"></span>
+                        <h2 class="text-2xl font-bold text-slate-800">Focus Distribution of Enablement Support</h2>
+                    </div>
+                    <p class="text-slate-600 mb-4 leading-relaxed text-sm">
+                        Our model is built around **consultation and backup capacity**. The visualization highlights how our support efforts are balanced: prioritizing collaborative ways of working, advisory guidance, and maintaining a robust safety net of coverage for PTO and peak projects.
+                    </p>
+                    <p class="text-slate-600 mb-6 leading-relaxed text-sm">
+                        Ultimately, we want to help peer leaders streamline their administrative overhead, allowing them to reinvest their energy into high-value customer planning strategies and range-focused team development.
+                    </p>
+
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+                            <span class="text-sm font-semibold text-slate-700">Advisory: Coaching & Corrective Dialogue Guidance</span>
+                            <span class="text-sm font-bold text-ikeaBlue">30% Focus</span>
+                        </div>
+                        <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+                            <span class="text-sm font-semibold text-slate-700">Efficiency: Admin & QA Workflow Simplification</span>
+                            <span class="text-sm font-bold text-ikeaBlue">30% Focus</span>
+                        </div>
+                        <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+                            <span class="text-sm font-semibold text-slate-700">Backup Coverage: Planned PTO & Peak Project Safety Net</span>
+                            <span class="text-sm font-bold text-emerald-600">20% Focus</span>
+                        </div>
+                        <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+                            <span class="text-sm font-semibold text-slate-700">Engagement: Shared Slide Decks & Meeting Templates</span>
+                            <span class="text-sm font-bold text-emerald-600">20% Focus</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Interactive Chart Container -->
+                <div class="flex flex-col justify-between">
+                    <div class="text-sm font-semibold text-slate-700 mb-4 text-center">Enablement Focus Area Breakdown</div>
+                    <div id="allocationChart" class="w-full h-80 bg-slate-50 rounded-xl p-4"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- STRENGTHS & CHALLENGES DISCOVERY TEMPLATE -->
+        <section class="mb-16 scroll-mt-20">
+            <div class="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100 rounded-2xl p-8">
+                <div class="text-center mb-8">
+                    <span class="bg-ikeaBlue text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">The Collaboration Tool</span>
+                    <h2 class="text-2xl font-bold text-slate-800 mt-2">Peer Strength & Challenge Discovery Matrix</h2>
+                    <p class="text-slate-600 text-sm max-w-xl mx-auto mt-1">
+                        Use this template during your Phase 1 "Fika" discovery conversations with each peer to identify how to build collaborative workflows and align support.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+
+                    <!-- STRENGTHS -->
+                    <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-sm flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center space-x-2 text-emerald-600 font-bold mb-3 text-sm">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                <span>Leader Strengths</span>
+                            </div>
+                            <p class="text-xs text-slate-500 italic mb-4">"Where do you feel you excel most? What comes naturally to you?"</p>
+                            <div class="space-y-2 text-xs text-slate-700 font-medium">
+                                <div class="bg-emerald-50 px-3 py-2 rounded border border-emerald-100">Co-worker Development</div>
+                                <div class="bg-emerald-50 px-3 py-2 rounded border border-emerald-100">Kitchen Range Knowledge</div>
+                                <div class="bg-emerald-50 px-3 py-2 rounded border border-emerald-100">Customer Issue Resolution</div>
+                            </div>
+                        </div>
+                        <div class="text-[10px] text-slate-400 mt-4">
+                            Goal: Leverage peer strengths to uplift others.
+                        </div>
+                    </div>
+
+                    <!-- CHALLENGES -->
+                    <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-sm flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center space-x-2 text-red-500 font-bold mb-3 text-sm">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                                <span>Workflow Challenges</span>
+                            </div>
+                            <p class="text-xs text-slate-500 italic mb-4">"What administrative or coaching processes feel inefficient?"</p>
+                            <div class="space-y-2 text-xs text-slate-700 font-medium">
+                                <div class="bg-red-50 px-3 py-2 rounded border border-red-100">Time-consuming Quality Audits</div>
+                                <div class="bg-red-50 px-3 py-2 rounded border border-red-100">Kronos & PTO Admin Overhead</div>
+                                <div class="bg-red-50 px-3 py-2 rounded border border-red-100">Structuring Corrective Dialogues</div>
+                            </div>
+                        </div>
+                        <div class="text-[10px] text-slate-400 mt-4">
+                            Goal: Target areas for efficiency coaching.
+                        </div>
+                    </div>
+
+                    <!-- OPPORTUNITIES -->
+                    <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-sm flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center space-x-2 text-blue-500 font-bold mb-3 text-sm">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                                <span>Synergy Opportunities</span>
+                            </div>
+                            <p class="text-xs text-slate-500 italic mb-4">"Where can we streamline processes together to save effort?"</p>
+                            <div class="space-y-2 text-xs text-slate-700 font-medium">
+                                <div class="bg-blue-50 px-3 py-2 rounded border border-blue-100">Joint planning & phone meetings</div>
+                                <div class="bg-blue-50 px-3 py-2 rounded border border-blue-100">Calibrated QA checkpoints</div>
+                                <div class="bg-blue-50 px-3 py-2 rounded border border-blue-100">Shared remote co-worker trackers</div>
+                            </div>
+                        </div>
+                        <div class="text-[10px] text-slate-400 mt-4">
+                            Goal: Combine resources to save preparation time.
+                        </div>
+                    </div>
+
+                    <!-- COLLABORATIVE PLAN -->
+                    <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-sm flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center space-x-2 text-amber-500 font-bold mb-3 text-sm">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                <span>Immediate Support Actions</span>
+                            </div>
+                            <p class="text-xs text-slate-500 italic mb-4">"What workflow guides or backup options would help you most?"</p>
+                            <div class="space-y-2 text-xs text-slate-700 font-medium">
+                                <div class="bg-amber-50 px-3 py-2 rounded border border-amber-100">Review corrective action drafts</div>
+                                <div class="bg-amber-50 px-3 py-2 rounded border border-amber-100">Adopt time-saving QA checklists</div>
+                                <div class="bg-amber-50 px-3 py-2 rounded border border-amber-100">Set up upcoming PTO backup dates</div>
+                            </div>
+                        </div>
+                        <div class="text-[10px] text-slate-400 mt-4">
+                            Goal: Formulate a collaborative plan of action.
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ALIGNMENT GOVERNANCE & FEEDBACK LOOP -->
+        <section class="mb-12 bg-slate-100 border border-slate-200 rounded-2xl p-8">
+            <h3 class="text-xl font-bold text-slate-800 mb-4 flex items-center">
+                <svg class="w-6 h-6 mr-2 text-ikeaBlue" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                Governance & Alignment (Supporting the Remote Area Manager)
+            </h3>
+            <p class="text-slate-600 text-sm mb-6 leading-relaxed">
+                To keep our Remote Area Manager fully informed and aligned, we will establish a structured, lightweight feedback loop. This guarantees full visibility into our achievements, co-worker performance levels, and operational bottlenecks without adding unnecessary overhead.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white p-5 rounded-xl border border-slate-200">
+                    <h4 class="font-bold text-slate-800 text-sm mb-2">Weekly Briefing</h4>
+                    <p class="text-xs text-slate-500 leading-relaxed">
+                        A quick, high-impact update to the RAM on shared best practices introduced, efficiency metrics, and upcoming PTO/Project backup schedules.
+                    </p>
+                </div>
+                <div class="bg-white p-5 rounded-xl border border-slate-200">
+                    <h4 class="font-bold text-slate-800 text-sm mb-2">Bi-Weekly Peer Roundtable</h4>
+                    <p class="text-xs text-slate-500 leading-relaxed">
+                        A collaborative 30-minute roundtable check-in with the Baltimore TLs to share coaching wins, calibrate QA, and review upcoming PTO/projects needing coverage support.
+                    </p>
+                </div>
+                <div class="bg-white p-5 rounded-xl border border-slate-200">
+                    <h4 class="font-bold text-slate-800 text-sm mb-2">Monthly Business Review</h4>
+                    <p class="text-xs text-slate-500 leading-relaxed">
+                        A joint alignment call with the Remote Area Manager and peers to analyze performance indicators (NPS, conversion, payroll SLA compliance, team attendance).
+                    </p>
+                </div>
+            </div>
+        </section>
+
+    
+        <!-- NEXT STEPS: CRITICAL QUESTIONS & STAKEHOLDER ENGAGEMENTS -->
+        <section class="mb-12 grid grid-cols-1 lg:grid-cols-2 gap-8 scroll-mt-20" id="next-steps">
+
+            <!-- LEFT: CRITICAL QUESTIONS -->
+            <div class="bg-white rounded-2xl p-8 shadow-sm border border-slate-100 flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center space-x-2 mb-6">
+                        <span class="w-2 h-6 bg-ikeaYellow rounded-full"></span>
+                        <h3 class="text-xl font-bold text-slate-800">Critical Questions for the Interim Period</h3>
+                    </div>
+                    <p class="text-slate-500 text-sm mb-6 leading-relaxed">
+                        To ensure seamless operational continuity while our remote specialists are being trained, we need to clarify immediate resource strategies and tool ownership:
+                    </p>
+
+                    <div class="space-y-6">
+                        <!-- Question 1 -->
+                        <div class="border-l-4 border-ikeaBlue pl-4 py-1">
+                            <h4 class="font-bold text-slate-800 text-sm flex items-center">
+                                <span class="bg-blue-50 text-ikeaBlue text-xs font-bold px-2 py-0.5 rounded mr-2 uppercase">Kitchen Waitlists</span>
+                                Where are we with waitlists?
+                            </h4>
+                            <p class="text-xs text-slate-600 mt-1 leading-relaxed">
+                                What is our current volume status, and can we transition kitchen waitlist management entirely to our outbound teams using the SPM platform to reclaim specialist design hours?
+                            </p>
+                        </div>
+
+                        <!-- Question 2 -->
+                        <div class="border-l-4 border-ikeaBlue pl-4 py-1">
+                            <h4 class="font-bold text-slate-800 text-sm flex items-center">
+                                <span class="bg-blue-50 text-ikeaBlue text-xs font-bold px-2 py-0.5 rounded mr-2 uppercase">Veta Platform</span>
+                                Interim Veta Expectations
+                            </h4>
+                            <p class="text-xs text-slate-600 mt-1 leading-relaxed">
+                                What are the baseline operational expectations concerning the Veta system during this interim period while our newest co-workers complete their specialist range training?
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 mt-8">
+                    <span class="text-[10px] text-slate-400 font-bold uppercase block mb-1">Goal:</span>
+                    <p class="text-xs text-slate-500">Secure immediate strategic clarity to align our Baltimore team leaders before implementing any shifts in task ownership.</p>
+                </div>
+            </div>
+
+            <!-- RIGHT: STAKEHOLDER MEETING MAP -->
+            <div class="bg-white rounded-2xl p-8 shadow-sm border border-slate-100 flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center space-x-2 mb-6">
+                        <span class="w-2 h-6 bg-ikeaBlue rounded-full"></span>
+                        <h3 class="text-xl font-bold text-slate-800">Planned Stakeholder Engagements</h3>
+                    </div>
+                    <p class="text-slate-500 text-sm mb-6 leading-relaxed">
+                        Establishing cross-functional synergy is critical to bridging process gaps. Below are the targeted stakeholder alignments scheduled to support this plan:
+                    </p>
+
+                    <div class="space-y-4">
+
+                        <!-- Meeting 1 -->
+                        <div class="flex items-start space-x-3 pb-3 border-b border-slate-100">
+                            <div class="bg-blue-50 text-ikeaBlue p-2 rounded-lg font-bold text-xs mt-0.5">QA</div>
+                            <div>
+                                <h4 class="font-bold text-xs text-slate-800">Quality Assurance Team</h4>
+                                <p class="text-[11px] text-slate-500 mt-0.5">Discuss specific performance/coaching patterns observed among Baltimore leaders to identify key areas for quality improvement.</p>
+                            </div>
+                        </div>
+
+                        <!-- Meeting 2 -->
+                        <div class="flex items-start space-x-3 pb-3 border-b border-slate-100">
+                            <div class="bg-amber-50 text-amber-700 p-2 rounded-lg font-bold text-xs mt-0.5">AW</div>
+                            <div>
+                                <h4 class="font-bold text-xs text-slate-800">Ashleigh Westervelt <span class="font-normal text-slate-400">(Sales & Resolutions)</span></h4>
+                                <p class="text-[11px] text-slate-500 mt-0.5">Bridge the gap between sales generation and customer resolutions; define clear task handoffs and shared process responsibilities.</p>
+                            </div>
+                        </div>
+
+                        <!-- Meeting 3 -->
+                        <div class="flex items-start space-x-3 pb-3 border-b border-slate-100">
+                            <div class="bg-emerald-50 text-emerald-700 p-2 rounded-lg font-bold text-xs mt-0.5">CC</div>
+                            <div>
+                                <h4 class="font-bold text-xs text-slate-800">Dominique Frederick & Brittany Hecker <span class="font-normal text-slate-400">(Custom Countertops)</span></h4>
+                                <p class="text-[11px] text-slate-500 mt-0.5">Review the current timeline and progress of moving custom countertop payments into a direct customer-facing selling tool.</p>
+                            </div>
+                        </div>
+
+                        <!-- Meeting 4 -->
+                        <div class="flex items-start space-x-3 pb-3 border-b border-slate-100">
+                            <div class="bg-purple-50 text-purple-700 p-2 rounded-lg font-bold text-xs mt-0.5">PS</div>
+                            <div>
+                                <h4 class="font-bold text-xs text-slate-800">PS&I Team <span class="font-normal text-slate-400">(Brendan Patek)</span></h4>
+                                <p class="text-[11px] text-slate-500 mt-0.5">Discuss upcoming shifts in custom countertop ways of working and analyze the direct business and customer-impact considerations.</p>
+                            </div>
+                        </div>
+
+                        <!-- Meeting 5 -->
+                        <div class="flex items-start space-x-3">
+                            <div class="bg-indigo-50 text-indigo-700 p-2 rounded-lg font-bold text-xs mt-0.5">AN</div>
+                            <div>
+                                <h4 class="font-bold text-xs text-slate-800">Analytics Team</h4>
+                                <p class="text-[11px] text-slate-500 mt-0.5">Identify and build reports/dashboards to track the operational and business impact of changes in waitlists, countertops, and workflow shifts.</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+</main>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-900 text-slate-400 py-12 px-4 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto text-center">
+            <p class="text-sm font-bold text-white mb-2 uppercase tracking-wider">TILLSAMMANS PEER SUPPORT & ENABLEMENT INITIATIVE</p>
+            <p class="text-xs text-slate-500 max-w-md mx-auto mb-6">Designed to empower remote leaders, support our wonderful co-workers, and build a stronger everyday retail operation for IKEA.</p>
+            <div class="text-xs text-slate-600">
+                For Internal IKEA Use Only &bull; Baltimore Customer Support Operations &bull; &copy; 2026
+            </div>
+        </div>
+    </footer>
+
+    <!-- Chart Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var chartDom = document.getElementById('allocationChart');
+            var myChart = echarts.init(chartDom);
+            var option;
+
+            option = {
+                tooltip: {
+                    trigger: 'item',
+                    formatter: '{b}: {c}%'
+                },
+                legend: {
+                    orient: 'horizontal',
+                    bottom: '0',
+                    textStyle: {
+                        color: '#475569',
+                        fontSize: 11
+                    }
+                },
+                series: [
+                    {
+                        name: 'Support Allocation',
+                        type: 'pie',
+                        radius: ['40%', '70%'],
+                        avoidLabelOverlap: false,
+                        itemStyle: {
+                            borderRadius: 6,
+                            borderColor: '#ffffff',
+                            borderWidth: 2
+                        },
+                        label: {
+                            show: false,
+                            position: 'center'
+                        },
+                        emphasis: {
+                            label: {
+                                show: true,
+                                fontSize: '14',
+                                fontWeight: 'bold'
+                            }
+                        },
+                        labelLine: {
+                            show: false
+                        },
+                        data: [
+                            { value: 30, name: 'Advisory Guidance', itemStyle: { color: '#0058a3' } },
+                            { value: 30, name: 'Efficiency Consulting', itemStyle: { color: '#003580' } },
+                            { value: 20, name: 'Backup Coverage (PTO/Projects)', itemStyle: { color: '#ffdb00' } },
+                            { value: 20, name: 'Templates & Meeting Facilitation', itemStyle: { color: '#10b981' } }
+                        ]
+                    }
+                ]
+            };
+
+            option && myChart.setOption(option);
+
+            window.addEventListener('resize', function() {
+                myChart.resize();
+            });
+        });
+    </script>
+</body>
+</html>
