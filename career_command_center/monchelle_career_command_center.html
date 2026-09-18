@@ -1,0 +1,794 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#fff8fb" />
+<title>Career Command Center · Monchelle</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://g.alicdn.com/code/lib/echarts/5.4.3/echarts.min.js"></script>
+<script>
+tailwind.config = { theme: { extend: { colors: { ink:'#4b4055', mint:'#a8dfd0', lavender:'#b8a9e8', paper:'#fff8fb', blush:'#f7c9d9', peach:'#f8d8bd', butter:'#f7e7ad', sky:'#c9e5f3' }, boxShadow:{soft:'0 18px 50px rgba(33,48,76,.10)'} } } }
+</script>
+<style>
+  body{margin:0;background:#fff8fb;color:#4b4055;font-family:"DM Sans",ui-sans-serif,system-ui,sans-serif} h1,h2,h3,.font-black{font-family:"Playfair Display",Georgia,serif} aside{background:#fffdfd!important} .glass{border-color:#f5e5ed!important} .bg-ink{background:#4b4055!important} .text-lavender{color:#8f7ccc!important} .bg-lavender{background:#b8a9e8!important} .bg-mint{background:#a8dfd0!important} .text-mint{color:#5cad9c!important} .nav-active{background:#f3edf9;color:#8f7ccc}.shadow-soft{box-shadow:0 18px 50px rgba(145,104,129,.12)}
+  .glass{background:rgba(255,255,255,.86);backdrop-filter:blur(14px)}
+  .scrollbar::-webkit-scrollbar{width:8px}.scrollbar::-webkit-scrollbar-thumb{background:#d9dfeb;border-radius:99px}
+  .nav-active{background:#eef0ff;color:#6357da}.nav-active svg{stroke:#6357da}
+  .pill{font-size:11px;font-weight:700;padding:5px 9px;border-radius:999px;display:inline-flex;align-items:center;gap:5px}
+  .modal-bg{background:rgba(13,24,41,.45);backdrop-filter:blur(4px)}
+  input,textarea,select{outline:none!important}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+<div class="min-h-screen flex">
+  <aside class="hidden lg:flex w-72 bg-white border-r border-[#f1dfe8] p-6 flex-col fixed inset-y-0 left-0 z-10">
+    <div class="flex items-center gap-3 mb-10">
+      <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-[#c9b9ee] to-[#a8dfd0] flex items-center justify-center text-[#4b4055] text-xl" aria-label="AI-optimized job search">✦</div>
+      <div><div class="font-black text-lg tracking-tight">Career Command</div><div class="text-xs text-slate-400">your job search OS</div></div>
+    </div>
+    <div class="text-[10px] uppercase tracking-[.18em] text-slate-400 font-bold mb-3">Workspace</div>
+    <nav class="space-y-1">
+      <button type="button" class="nav w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold nav-active" data-view="overview"><span>⌂</span> Overview</button>
+      <button type="button" class="nav w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-slate-500 hover:bg-slate-50" data-view="tracker"><span>▤</span> Application tracker</button>
+      <button type="button" class="nav w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-slate-500 hover:bg-slate-50" data-view="matches"><span>◈</span> Job matches <span id="jobMatchesBadge" class="ml-auto text-[10px] bg-mint/15 text-emerald-700 px-2 py-1 rounded-full">0 available</span></button>
+      <button type="button" class="nav w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-slate-500 hover:bg-slate-50" data-view="documents"><span>▧</span> Resume & letters</button>
+    </nav>
+    <div class="mt-auto pt-6 text-xs text-slate-400 leading-5">Your dashboard keeps your search organized, targeted, and ready for the next opportunity.</div>
+  </aside>
+  <main class="lg:ml-72 flex-1 p-5 md:p-8 pt-5 md:pt-8 max-w-[1700px]">
+    <header class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8"><div><div id="dashboardDate" class="text-xs font-bold uppercase tracking-[.18em] text-lavender mb-2">Today</div><h1 class="text-3xl md:text-4xl font-black tracking-tight">Good morning, Monchelle <span class="inline-block">✦</span></h1><p class="text-slate-500 mt-2">Turn promising opportunities into your next offer.</p></div><div class="flex items-center gap-3"><button type="button" id="addJob" class="bg-ink text-white px-4 py-3 rounded-xl font-bold text-sm shadow-soft hover:-translate-y-0.5 transition">＋ Add job</button><div class="w-11 h-11 rounded-full bg-gradient-to-br from-amber-200 to-orange-300 flex items-center justify-center font-black">M</div></div></header>
+
+    <section id="overview" class="view space-y-6">
+      <div class="grid grid-cols-2 xl:grid-cols-4 gap-4"><div class="glass rounded-2xl p-5 border border-white shadow-soft"><div class="flex justify-between"><span class="text-sm text-slate-500">Active applications</span><span id="metricActiveTrend" class="text-slate-400">—</span></div><div id="metricActive" class="text-3xl font-black mt-4">0</div><div id="metricActiveSub" class="text-xs text-slate-400 mt-1">across 0 companies</div></div><div class="glass rounded-2xl p-5 border border-white shadow-soft"><div class="flex justify-between"><span class="text-sm text-slate-500">Interviews</span><span id="metricInterviewTrend" class="text-slate-400">—</span></div><div id="metricInterviews" class="text-3xl font-black mt-4">0</div><div id="metricInterviewsSub" class="text-xs text-slate-400 mt-1">tracked interviews</div></div><div class="glass rounded-2xl p-5 border border-white shadow-soft"><div class="flex justify-between"><span class="text-sm text-slate-500">Avg. match score</span><span id="metricMatchTrend" class="text-slate-400">—</span></div><div id="metricMatch" class="text-3xl font-black mt-4">0%</div><div id="metricMatchSub" class="text-xs text-slate-400 mt-1">based on tracked jobs</div></div><div class="glass rounded-2xl p-5 border border-white shadow-soft"><div class="flex justify-between"><span class="text-sm text-slate-500">Average applications/day</span><span id="metricDailyTrend" class="text-slate-400">—</span></div><div id="metricDaily" class="text-3xl font-black mt-4">0.0</div><div id="metricDailySub" class="text-xs text-slate-400 mt-1">since first tracked application</div></div></div>
+      <div class="grid xl:grid-cols-[1.55fr_1fr] gap-6">
+        <div class="glass rounded-2xl border border-white shadow-soft p-6"><div class="flex items-center justify-between mb-3"><div><h2 class="font-black text-lg">Application momentum</h2><p class="text-sm text-slate-400">Applications and positive responses over time</p></div><select id="momentumRange" class="text-xs bg-slate-50 rounded-lg px-3 py-2 text-slate-500"><option value="8w">Last 8 weeks</option><option value="7d">Last week</option><option value="30d">Last 30 days</option><option value="90d">Last 90 days</option></select></div><div id="momentum" class="h-64"></div></div>
+        <div class="glass rounded-2xl border border-white shadow-soft p-6"><div class="flex items-center justify-between mb-5"><div><h2 class="font-black text-lg">Pipeline health</h2><p class="text-sm text-slate-400">Where your applications stand</p></div><span class="pill bg-emerald-50 text-emerald-700">Healthy</span></div><div id="pipeline" class="h-56"></div><div class="grid grid-cols-2 gap-3 text-xs"><div data-pipeline="Applied" class="flex justify-between"><span class="text-slate-500">Applied</span><b>12</b></div><div data-pipeline="Screening" class="flex justify-between"><span class="text-slate-500">Screening</span><b>4</b></div><div data-pipeline="Interview" class="flex justify-between"><span class="text-slate-500">Interview</span><b>5</b></div><div data-pipeline="Offer" class="flex justify-between"><span class="text-slate-500">Offer</span><b>1</b></div></div></div>
+      </div>
+      <div id="wishlistReminder" class="rounded-2xl border border-[#f2d6a6] bg-[#fffaf0] shadow-soft p-5"><div class="flex flex-col md:flex-row md:items-start gap-4"><div class="w-11 h-11 shrink-0 rounded-xl bg-[#f7e7ad] text-[#9a7830] flex items-center justify-center text-xl">⏰</div><div class="flex-1"><div class="flex flex-wrap items-center gap-2"><h2 class="font-black text-lg text-[#6f5830]">Wishlist reminder</h2><span id="wishlistReminderBadge" class="pill bg-[#f7e7ad] text-[#80652b]">0 saved</span></div><p class="text-sm text-[#8b7350] mt-1">These saved opportunities are waiting for you. Submit aging applications ASAP while they are still active.</p><div id="wishlistReminderList" class="mt-4 grid md:grid-cols-2 gap-2"><div class="md:col-span-2 rounded-xl border border-dashed border-[#e8d7ad] bg-white/60 p-4 text-sm text-[#9a805b]">No wishlist jobs yet. Add promising opportunities from Job Matches or the Application Tracker.</div></div></div><button type="button" id="wishlistViewTracker" class="shrink-0 text-sm font-bold text-[#8f7ccc] hover:underline">View tracker →</button></div></div>
+      <div class="grid xl:grid-cols-[1.25fr_1fr] gap-6"><div class="glass rounded-2xl border border-white shadow-soft p-6"><div class="flex justify-between items-center mb-5"><div><h2 class="font-black text-lg">Recent applications</h2><p class="text-sm text-slate-400">Your latest activity</p></div><button class="text-sm font-bold text-lavender" data-go="tracker">View all →</button></div><div id="recent" class="space-y-3"></div></div><div class="rounded-2xl p-6 bg-gradient-to-br from-[#c5b7ed] to-[#a895dc] text-white shadow-soft"><div class="flex justify-between items-start"><div><div class="text-xs text-white/80 uppercase tracking-[.15em] font-bold">AI career coach</div><h2 class="text-2xl font-black mt-3 leading-tight">Your next best move</h2></div><span class="text-3xl">✧</span></div><p class="text-white/80 text-sm leading-6 mt-4">The Baltimore market is moving. Three roles in your target range are a strong match this week.</p><button class="mt-6 bg-white text-lavender px-4 py-3 rounded-xl text-sm font-black" data-go="matches">Explore matches</button></div></div>
+    </section>
+
+    <section id="tracker" class="view hidden space-y-6"><div class="flex flex-col md:flex-row gap-3 justify-between"><div><h2 class="text-2xl font-black">Application tracker</h2><p class="text-slate-500 text-sm mt-1">Every opportunity, one calm place. Use <b>Edit</b> on any row to update it.</p><div class="flex flex-wrap items-center gap-2 mt-3"><span id="trackerSyncStatus" class="pill bg-slate-100 text-slate-600">Not synced yet</span><button id="syncTrackerBtn" type="button" class="text-xs font-bold text-[#8f7ccc] hover:underline">Sync now</button></div></div><div class="mt-3 text-xs text-slate-400">Supabase sync status appears here after you open this page. Click <b>Sync now</b> to reload your saved applications. Deletes are verified against Supabase.</div><div class="flex gap-2"><input id="trackerSearch" placeholder="Search jobs…" class="bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-sm w-48"><select id="statusFilter" class="bg-white border border-slate-200 rounded-xl px-3 text-sm"><option>All statuses</option><option>Wishlist</option><option>Applied</option><option>Screening</option><option>Interview</option><option>Offer</option><option>Not selected</option><option>Rejected</option></select></div></div><div class="glass rounded-2xl border border-white shadow-soft overflow-hidden"><div class="overflow-x-auto"><table class="w-full text-left min-w-[850px]"><thead class="bg-slate-50 text-[11px] uppercase tracking-wider text-slate-400"><tr><th class="px-6 py-4">Role / company</th><th class="px-4 py-4">Location</th><th class="px-4 py-4">Status</th><th class="px-4 py-4">Match</th><th class="px-4 py-4">Last update</th><th class="px-4 py-4">Actions</th></tr></thead><tbody id="jobRows" class="divide-y divide-slate-100"></tbody></table></div></div></section>
+
+    <section id="matches" class="view hidden space-y-6"><div class="flex flex-col md:flex-row justify-between gap-4"><div><h2 class="text-2xl font-black">Top job matches</h2><p class="text-slate-500 text-sm mt-1">Live-search results from current job boards, filtered for your skills, location, and $70k salary floor.</p><p id="jobSearchUpdated" class="text-xs text-slate-400 mt-2">The badge shows currently available database matches.</p></div><button type="button" id="searchJobs" class="bg-lavender text-white px-4 py-3 rounded-xl font-bold text-sm">↻ Refresh search</button></div><div class="glass rounded-2xl p-5 border border-white shadow-soft"><div class="flex flex-wrap items-center gap-3"><span class="text-xs font-bold text-slate-500">Filters</span><label class="pill bg-slate-100 text-slate-600"><input type="checkbox" class="mr-1" checked> Fully remote</label><label class="pill bg-slate-100 text-slate-600"><input type="checkbox" class="mr-1" checked> Hybrid · Baltimore</label><label class="pill bg-slate-100 text-slate-600"><input type="checkbox" class="mr-1" checked> On-site · Baltimore</label><span class="ml-auto text-xs font-bold text-emerald-700">$70k+ minimum</span></div></div><div class="glass rounded-2xl p-5 border border-white shadow-soft"><div class="flex flex-col md:flex-row md:items-center justify-between gap-3"><div><h3 class="font-black">Live job-source search</h3><p class="text-xs text-slate-400 mt-1">Open current searches from the recruiting sources you selected.</p></div><div id="liveSourceStatus" class="text-xs font-bold text-emerald-700">Ready to search</div></div><div id="liveSourceLinks" class="flex flex-wrap gap-2 mt-4"></div></div><div id="matchDbStatus" class="text-xs text-slate-500"></div><div id="matchCards" class="grid lg:grid-cols-2 gap-4"></div></section>
+
+    <section id="documents" class="view hidden space-y-6"><div class="glass rounded-2xl border border-white shadow-soft p-6 mb-6"><div class="flex flex-col md:flex-row md:items-center justify-between gap-4"><div><h3 class="font-black">Connect your Supabase project</h3><p class="text-xs text-slate-400 mt-1">Enter the Supabase Project URL and publishable/anon key from Project Settings → API. Your dashboard may run at http://localhost:3000, but that is not the Supabase Project URL.</p></div><span id="supabaseConnectionStatus" class="pill bg-slate-100 text-slate-600">Not connected</span></div><div class="grid md:grid-cols-[1fr_1fr_auto] gap-3 mt-4"><input id="supabaseProjectUrl" type="url" value="https://cznnvfagogvxlkqoqkkf.supabase.co" placeholder="https://your-project.supabase.co" aria-label="Supabase Project URL" class="rounded-xl border border-slate-200 p-3 text-sm"><input id="supabaseAnonKey" type="password" placeholder="Publishable/anon key" aria-label="Supabase publishable key" class="rounded-xl border border-slate-200 p-3 text-sm"><button id="connectSupabase" type="button" class="bg-ink text-white rounded-xl px-4 py-3 font-bold text-sm">Connect</button><button id="resetSupabase" type="button" class="border border-slate-200 rounded-xl px-4 py-3 font-bold text-sm">Reset</button></div><p class="text-[11px] text-slate-400 mt-3">Use only the browser-safe publishable/anon key. Never enter your database password or service_role key.</p><p class="text-[11px] text-amber-700 mt-2">If you see “Use your Supabase URL,” go to Project Settings → API and copy the URL that ends in <code>.supabase.co</code>. Keep <code>http://localhost:3000</code> as the dashboard site URL.</p></div><div class="glass rounded-2xl border border-white shadow-soft p-6 mb-6"><div class="flex flex-col md:flex-row md:items-center justify-between gap-4"><div><h3 class="font-black">Sign in to enable private storage</h3><p class="text-xs text-slate-400 mt-1">Connecting tests the project. Sign in separately to upload resumes and save your profile. Use the current publishable key from Project Settings → API.</p></div><span id="supabaseAuthStatus" class="pill bg-slate-100 text-slate-600">Not signed in</span></div><div class="grid md:grid-cols-[1fr_1fr_auto_auto] gap-3 mt-4"><input id="supabaseEmail" type="email" placeholder="Email" class="rounded-xl border border-slate-200 p-3 text-sm"><input id="supabasePassword" type="password" placeholder="Password" class="rounded-xl border border-slate-200 p-3 text-sm"><button id="supabaseSignIn" type="button" class="bg-[#8f7ccc] text-white rounded-xl px-4 py-3 font-bold text-sm">Sign in</button><button id="supabaseSignUp" type="button" class="border border-slate-200 rounded-xl px-4 py-3 font-bold text-sm">Create account</button></div><div id="supabaseAuthMessage" class="text-xs text-slate-500 mt-3"></div></div><div><h2 class="text-2xl font-black">Resume & letters</h2><p class="text-slate-500 text-sm mt-1">Build targeted documents from one master profile.</p></div><div class="glass rounded-2xl border border-white shadow-soft p-6">
+<div class="flex items-center gap-3 mb-5"><div class="w-11 h-11 rounded-xl bg-[#fbe8ef] text-[#bf7594] flex items-center justify-center text-xl">↑</div><div><h3 class="font-black">Upload your resume</h3><p class="text-xs text-slate-400">PDF, DOC, or DOCX · stored in this browser</p></div></div>
+<label for="resumeUpload" class="block cursor-pointer rounded-2xl border-2 border-dashed border-[#e8cbd8] bg-[#fff8fb] p-6 text-center hover:bg-[#fff1f6] transition"><div class="text-3xl mb-2">♡</div><div class="font-bold text-sm">Choose a resume file</div><div class="text-xs text-slate-400 mt-1">or drop it here · Chrome supported</div><input id="resumeUpload" type="file" accept=".pdf,.doc,.docx" class="hidden"></label>
+<div id="resumeStatus" class="mt-3 text-sm text-slate-500">No resume uploaded yet.</div><div id="resumeCloudStatus" class="mt-2 text-xs text-slate-400">Local browser mode until Supabase is connected.</div>
+<div class="flex gap-2 mt-4"><button id="removeResume" class="hidden flex-1 border border-slate-200 rounded-xl py-3 font-bold text-sm">Remove</button><button id="resumeUse" class="hidden flex-1 bg-[#4b4055] text-white rounded-xl py-3 font-bold text-sm">Use for tailoring</button></div>
+</div><div class="glass rounded-2xl border border-white shadow-soft p-6"><div class="flex items-center gap-3 mb-5"><div class="w-11 h-11 rounded-xl bg-indigo-50 text-lavender flex items-center justify-center text-xl">▧</div><div><h3 class="font-black">Master resume</h3><p id="masterResumeUpdated" class="text-xs text-slate-400">Updated September 12, 2026 · DOCX</p></div></div><div id="masterResumePreview" class="rounded-xl bg-slate-50 p-4 text-sm text-slate-600 leading-6">Product operations leader with 8+ years across healthcare technology, process improvement, stakeholder management, and analytics.</div><div class="flex gap-2 mt-4"><button id="editProfileBtn" type="button" class="flex-1 border border-slate-200 rounded-xl py-3 font-bold text-sm">Edit profile</button><button class="flex-1 bg-ink text-white rounded-xl py-3 font-bold text-sm" onclick="downloadDoc('Master Resume - Monchelle')">Download DOCX</button></div></div><div class="glass rounded-2xl border border-white shadow-soft p-6"><div class="flex items-center gap-3 mb-5"><div class="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl">✦</div><div><h3 class="font-black">Document generator</h3><p class="text-xs text-slate-400">Tailor a resume or create a cover letter</p></div></div><div class="space-y-3"><button id="tailorResumeBtn" type="button" class="w-full text-left rounded-xl border border-slate-200 p-4 hover:border-lavender"><b class="block text-sm">Tailor resume to a job</b><span class="text-xs text-slate-400">Uses the selected job description and your profile</span></button><button id="coverLetterBtn" type="button" class="w-full text-left rounded-xl border border-slate-200 p-4 hover:border-lavender"><b class="block text-sm">Create customized cover letter</b><span class="text-xs text-slate-400">Grounded in your experience and role requirements</span></button></div></div></div></section>
+
+    <footer class="mt-10 text-xs text-slate-400 flex flex-wrap gap-4"><span>Demo dashboard · local browser storage enabled</span><span>•</span><span>AI, job-search, and DOCX services are ready to connect to your preferred backend.</span></footer>
+  </main>
+</div>
+
+<div id="jobModal" class="hidden fixed inset-0 z-30 modal-bg items-center justify-center p-4"><div class="bg-white rounded-2xl w-full max-w-xl p-6 shadow-2xl"><div class="flex justify-between items-center mb-5"><h3 id="jobModalTitle" class="text-xl font-black">Add a job</h3><button id="closeJobModalBtn" type="button" class="text-slate-400 text-2xl" aria-label="Close job editor">×</button></div><div class="grid md:grid-cols-2 gap-4"><label class="text-sm font-bold">Company<input id="fCompany" class="mt-2 w-full rounded-xl border border-slate-200 p-3 font-normal" placeholder="Company name"></label><label class="text-sm font-bold">Job title<input id="fTitle" class="mt-2 w-full rounded-xl border border-slate-200 p-3 font-normal" placeholder="Role title"></label><label class="text-sm font-bold">Location<input id="fLocation" class="mt-2 w-full rounded-xl border border-slate-200 p-3 font-normal" placeholder="Remote / Baltimore, MD"></label><label class="text-sm font-bold">Status<select id="fStatus" class="mt-2 w-full rounded-xl border border-slate-200 p-3 font-normal"><option>Wishlist</option><option>Applied</option><option>Screening</option><option>Interview</option><option>Not selected</option></select></label><label class="text-sm font-bold md:col-span-2">Job posting URL<input id="fUrl" class="mt-2 w-full rounded-xl border border-slate-200 p-3 font-normal" placeholder="https://"></label><label class="text-sm font-bold md:col-span-2">Job description<textarea id="fDesc" class="mt-2 w-full rounded-xl border border-slate-200 p-3 font-normal h-28" placeholder="Paste the job description here…"></textarea></label></div><div class="grid grid-cols-3 gap-3 mt-5"><button id="cancelJobBtn" type="button" class="border border-slate-200 text-slate-600 rounded-xl py-3 font-bold">Cancel</button><button id="compareMatchBtn" type="button" class="border border-[#d8c9e8] text-[#8f7ccc] rounded-xl py-3 font-bold">Compare match</button><button id="saveJobBtn" type="button" onclick="saveJob()" class="bg-ink text-white rounded-xl py-3 font-bold">Save job</button></div><div id="matchStatus" class="mt-3 text-xs text-slate-500"></div></div></div>
+<div id="docModal" class="hidden fixed inset-0 z-30 modal-bg items-center justify-center p-4"><div class="bg-white rounded-2xl w-full max-w-lg p-6 shadow-2xl"><div class="flex justify-between items-center mb-5"><div><h3 id="docTitle" class="text-xl font-black">Tailor resume</h3><p class="text-sm text-slate-400 mt-1">Demo generation flow</p></div><button onclick="closeModal('docModal')" class="text-slate-400 text-2xl">×</button></div><label class="text-sm font-bold">Select job<select id="docJob" class="mt-2 w-full rounded-xl border border-slate-200 p-3 font-normal"></select></label><div id="docPreview" class="mt-4 rounded-xl bg-slate-50 p-4 text-sm text-slate-600 leading-6">Your targeted document preview will appear here.</div><button id="generateDoc" class="w-full bg-lavender text-white rounded-xl py-3 mt-5 font-bold">Generate ATS-optimized DOCX</button></div></div>
+<script>
+const seedJobs=[
+ {company:'CareFirst BlueCross BlueShield',title:'Senior Product Operations Manager',location:'Baltimore, MD · Hybrid',status:'Interview',match:91,updated:'Sep 15, 2026',url:'https://example.com/carefirst',desc:'Lead cross-functional product operations, improve healthcare workflows, manage stakeholders, and use analytics to drive operational outcomes.'},
+ {company:'Johns Hopkins Medicine',title:'Program Manager, Digital Health',location:'Baltimore, MD · On-site',status:'Screening',match:84,updated:'Sep 12, 2026',url:'https://example.com/jhm',desc:'Manage digital health programs, implementation roadmaps, vendor relationships, and performance metrics across clinical teams.'},
+ {company:'Workday',title:'Business Process Consultant',location:'Remote · US',status:'Applied',match:78,updated:'Sep 10, 2026',url:'https://example.com/workday',desc:'Advise customers on business process optimization, requirements gathering, change management, and enterprise software adoption.'},
+ {company:'Northrop Grumman',title:'Operations Excellence Lead',location:'Baltimore, MD · Hybrid',status:'Wishlist',match:76,updated:'Sep 8, 2026',url:'https://example.com/ng',desc:'Drive continuous improvement initiatives, build dashboards, facilitate executive reporting, and lead process transformation.'},
+ {company:'Under Armour',title:'Manager, Strategy & Operations',location:'Baltimore, MD · Hybrid',status:'Applied',match:72,updated:'Sep 5, 2026',url:'https://example.com/ua',desc:'Develop strategic plans, analyze performance, coordinate cross-functional initiatives, and communicate recommendations to senior leaders.'}
+];
+const candidates=[
+ {company:'Northrop Grumman',title:'Business Operations Manager',mode:'On-site · Baltimore, MD',salary:'$152,300–$228,500',match:94,why:'Operations leadership, executive reporting, and cross-functional execution.',applyUrl:'https://www.indeed.com/q-Business-Operations-Manager-l-Baltimore%2C-MD-jobs.html',careersUrl:'https://northropgrumman.jobs/careers',source:'Indeed / Northrop Grumman'},
+ {company:'Northrop Grumman',title:'Business Operations Manager 2',mode:'On-site · Baltimore, MD',salary:'$127,100–$190,700',match:92,why:'Prior strategy or operations experience and business-process leadership.',applyUrl:'https://www.indeed.com/q-Business-Operations-Manager-l-Baltimore%2C-MD-jobs.html',careersUrl:'https://northropgrumman.jobs/careers',source:'Indeed / Northrop Grumman'},
+ {company:'Northrop Grumman',title:'Production Operations Manager 2',mode:'On-site · Baltimore, MD',salary:'$139,800–$209,800',match:90,why:'Production execution, program communication, and operational coordination.',applyUrl:'https://www.indeed.com/q-Operation-Manager-l-Baltimore%2C-MD-jobs.html',careersUrl:'https://northropgrumman.jobs/careers',source:'Indeed / Northrop Grumman'},
+ {company:'Home Chef',title:'Operations & Warehouse Manager',mode:'On-site · Baltimore, MD',salary:'$125,000–$145,000',match:84,why:'Operations leadership, warehouse coordination, and cross-functional partnership.',applyUrl:'https://www.indeed.com/q-operations-manager-jobs-l-baltimore%2C-md-jobs.html',careersUrl:'https://www.homechef.com/careers',source:'Indeed / Home Chef'},
+ {company:'RSM',title:'Learning Operations Enablement Manager',mode:'Hybrid · Baltimore, MD',salary:'$102,800–$176,000',match:85,why:'Enablement operations, analysis, team leadership, and program execution.',applyUrl:'https://jobs.rsmus.com/?country=United+States',careersUrl:'https://rsmus.com/careers.html',source:'Indeed / RSM'},
+ {company:'Enterprise Community Partners',title:'Learning Management System, Sr. Program Manager',mode:'On-site · Columbia, MD',salary:'$90,000–$115,000',match:82,why:'Program implementation, training operations, and stakeholder coordination.',applyUrl:'https://www.indeed.com/q-Program-Manager-l-Baltimore%2C-MD-jobs.html',careersUrl:'https://www.enterprisecommunity.org/careers',source:'Indeed / Enterprise'},
+ {company:'MedStar Health',title:'Nurse Wellbeing Program Manager',mode:'On-site · Washington, DC',salary:'$71,843–$135,907',match:64,why:'Complex cross-functional program management and solution development.',applyUrl:'https://www.indeed.com/q-Program-Manager-l-Baltimore%2C-MD-jobs.html',careersUrl:'https://careers.medstarhealth.org/',source:'Indeed / MedStar'},
+ {company:'C&C Custom Lawncare',title:'Landscape Operations Manager',mode:'On-site · Mount Airy, MD',salary:'$80,000–$100,000',match:58,why:'Own field operations, scheduling, and team execution.',applyUrl:'https://www.indeed.com/q-Operations-l-Baltimore%2C-MD-jobs.html',careersUrl:'https://www.indeed.com/',source:'Indeed'},
+ {company:'Carlton Industrial Solutions',title:'Area Operations Manager',mode:'On-site · Baltimore, MD',salary:'$85,000–$95,000',match:76,why:'People leadership and operational performance management.',applyUrl:'https://www.indeed.com/q-Business-Operations-Manager-l-Baltimore%2C-MD-jobs.html',careersUrl:'https://www.indeed.com/',source:'Indeed'},
+ {company:'New Energy Equity',title:'Senior Manager of Business Operations',mode:'Hybrid · Annapolis, MD',salary:'$85,000–$105,000',match:79,why:'Business operations, onboarding, contract administration, and cross-functional work.',applyUrl:'https://www.indeed.com/q-Business-Operations-Manager-l-Baltimore%2C-MD-jobs.html',careersUrl:'https://newenergyequity.com/careers/',source:'Indeed'},
+ {company:'Snyder Cohn',title:'Firm Operations Manager',mode:'On-site · North Bethesda, MD',salary:'$105,000–$130,000',match:72,why:'Vendor relationships, office operations, and administrative budgets.',applyUrl:'https://www.indeed.com/q-Business-Operations-Manager-l-Baltimore%2C-MD-jobs.html',careersUrl:'https://www.snyder-cohn.com/careers/',source:'Indeed'},
+ {company:'Gardyn',title:'US Manufacturing and Fulfillment Manager',mode:'On-site · Gaithersburg, MD',salary:'$75,000–$90,000',match:71,why:'Manufacturing, fulfillment, process management, and customer experience.',applyUrl:'https://www.indeed.com/q-operations-manager-jobs-l-baltimore%2C-md-jobs.html',careersUrl:'https://mygardyn.com/careers/',source:'Indeed'},
+ {company:'Aledade',title:'Program Manager, Strategy & Operations',mode:'Fully remote · US',salary:'Salary shown on posting',match:96,why:'Annual operating plans, OKRs, strategic execution, and operational excellence.',applyUrl:'https://jobs.lever.co/aledade/4c13a1cb-9eaa-4721-8906-43c3f9dc0a5c',careersUrl:'https://jobs.lever.co/aledade',source:'Aledade Careers'},
+ {company:'SiriusPoint',title:'Program Manager, NA P&C Insurance',mode:'Fully remote · US',salary:'Salary shown on posting',match:68,why:'Program management, standards, procedures, audits, and cross-functional risk coordination.',applyUrl:'https://job-boards.eu.greenhouse.io/siriuspoint/jobs/4900475101',careersUrl:'https://www.siriuspoint.com/careers/',source:'SiriusPoint Careers'},
+ {company:'Modern Health',title:'Program Manager, Product Operations',mode:'Fully remote · US',salary:'Salary shown on posting',match:88,why:'Cross-functional product and technology execution, planning, and follow-through.',applyUrl:'https://job-boards.greenhouse.io/modernhealth/jobs/8637646002',careersUrl:'https://www.modernhealth.com/careers',source:'Modern Health Careers'},
+ {company:'Ashley Digital',title:'Strategic Program Manager',mode:'Fully remote · US',salary:'Salary shown on posting',match:86,why:'Execution-focused strategic program management and operating rhythm ownership.',applyUrl:'https://job-boards.greenhouse.io/residenthome/jobs/5989871004',careersUrl:'https://www.ashleyfurniture.com/careers/',source:'Greenhouse / Ashley Digital'},
+ {company:'Omada Health',title:'Senior EPD Operations Manager',mode:'Fully remote · US',salary:'Salary shown on posting',match:91,why:'Remote operations leadership in a digital-health organization.',applyUrl:'https://job-boards.greenhouse.io/omadahealth/jobs/7597061',careersUrl:'https://www.omadahealth.com/careers',source:'Omada Health Careers'},
+ {company:'Jobgether',title:'Senior Market Operations Program Manager',mode:'Fully remote · US',salary:'Salary shown on posting',match:83,why:'Market operations, project management, and cross-functional program execution.',applyUrl:'https://jobs.lever.co/jobgether/76f5d405-3bec-4cce-b2fa-aff648eeb793',careersUrl:'https://jobs.lever.co/jobgether',source:'Jobgether Careers'},
+ {company:'Akicita Federal',title:'Program Manager',mode:'Fully remote · US',salary:'Salary shown on posting',match:80,why:'Financial-management operations and cross-divisional coordination.',applyUrl:'https://jobs.lever.co/akicita-cyber/b5aeb62d-7cbe-4e82-a85f-75e477c9e5a4',careersUrl:'https://akicitafederal.com/careers/',source:'Akicita Federal Careers'},
+ {company:'Remote',title:'Remote Business Operations opportunities',mode:'Fully remote · US',salary:'Salary shown per posting',match:74,why:'Remote-first company with current business and operations openings.',applyUrl:'https://job-boards.greenhouse.io/remotecom',careersUrl:'https://remote.com/careers',source:'Remote Careers'},
+ {company:'Aledade',title:'Program Manager, Talent Management',mode:'Fully remote · US',salary:'Salary shown on posting',match:77,why:'Design, implementation, and management of talent programs.',applyUrl:'https://jobs.lever.co/aledade/0d03fecf-bdb7-445f-98aa-e81b64ee72f8',careersUrl:'https://jobs.lever.co/aledade',source:'Aledade Careers'}
+];
+window.ccCandidates=candidates;
+let jobs=JSON.parse(localStorage.getItem('cc_jobs')||'null')||seedJobs;
+window.ccGetTrackerJobs=function(){return jobs};
+window.ccReplaceTrackerJobs=function(next){jobs=Array.isArray(next)?next:[];localStorage.setItem('cc_jobs',JSON.stringify(jobs));if(typeof render==='function')render();};
+
+const $=s=>document.querySelector(s); const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function statusPill(s){let c={Wishlist:'bg-slate-100 text-slate-600',Applied:'bg-blue-50 text-blue-700',Screening:'bg-amber-50 text-amber-700',Interview:'bg-violet-50 text-violet-700',Offer:'bg-emerald-50 text-emerald-700',Rejected:'bg-rose-50 text-rose-700', 'Not selected':'bg-rose-50 text-rose-700'}[s]||'bg-slate-100 text-slate-600';return `<span class="pill ${c}"><span class="w-1.5 h-1.5 rounded-full bg-current"></span>${s}</span>`}
+function render(){let q=($('#trackerSearch')?.value||'').toLowerCase(), f=$('#statusFilter')?.value||'All statuses';let filtered=jobs.filter(j=>(f==='All statuses'||j.status===f)&&(`${j.company} ${j.title}`.toLowerCase().includes(q)));$('#jobRows').innerHTML=filtered.map(j=>{let idx=jobs.indexOf(j);return `<tr class="hover:bg-slate-50/60"><td class="px-6 py-4"><div class="font-bold text-sm">${esc(j.title)}</div><div class="text-xs text-slate-400 mt-1">${esc(j.company)}</div></td><td class="px-4 py-4 text-sm text-slate-500">${esc(j.location)}</td><td class="px-4 py-4">${statusPill(j.status)}</td><td class="px-4 py-4"><div class="flex items-center gap-2"><div class="w-16 h-1.5 bg-slate-100 rounded-full"><div class="h-1.5 rounded-full ${j.match>=85?'bg-mint':'bg-lavender'}" style="width:${j.match}%"></div></div><b class="text-sm">${j.match}%</b></div></td><td class="px-4 py-4 text-xs text-slate-400">${esc(j.updated)}</td><td class="px-4 py-4"><div class="flex items-center gap-3"><a class="text-lavender font-bold text-sm" href="${esc(j.url)}" target="_blank" rel="noopener">Open ↗</a><button type="button" class="edit-job text-slate-500 font-bold text-sm hover:text-lavender" data-index="${idx}">Edit</button><button type="button" class="tracker-delete text-rose-500 font-bold text-sm hover:text-rose-700" data-index="${idx}" onclick="return window.ccDeleteTrackerApplication ? window.ccDeleteTrackerApplication(${idx}) : false;">Delete</button></div></td></tr>`}).join('')||`<tr><td colspan="6" class="px-6 py-12 text-center text-slate-400">No jobs found.</td></tr>`;$('#recent').innerHTML=jobs.slice(0,4).map(j=>`<div class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50"><div class="w-10 h-10 rounded-xl bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center font-black text-slate-500">${esc(j.company[0])}</div><div class="min-w-0 flex-1"><div class="font-bold text-sm truncate">${esc(j.title)}</div><div class="text-xs text-slate-400">${esc(j.company)}</div></div><div class="text-right">${statusPill(j.status)}<div class="text-[10px] text-slate-400 mt-1">${j.updated}</div></div></div>`).join('');$('#matchCards').innerHTML=candidates.map((c,i)=>`<div class="glass rounded-2xl border border-white shadow-soft p-5"><div class="flex items-start gap-3"><div class="w-11 h-11 rounded-xl bg-gradient-to-br from-indigo-50 to-emerald-50 flex items-center justify-center font-black text-lavender">${c.company[0]}</div><div class="flex-1"><div class="flex justify-between gap-3"><div><h3 class="font-black">${c.title}</h3><div class="text-sm text-slate-400 mt-1">${c.company} · ${c.mode}</div></div><div class="text-right"><div class="text-2xl font-black text-lavender">${c.match}%</div><div class="text-[10px] text-slate-400">match</div></div></div><div class="flex gap-2 mt-3"><span class="pill bg-emerald-50 text-emerald-700">${c.salary}</span><span class="pill bg-slate-100 text-slate-600">${c.source}</span></div><p class="text-sm text-slate-500 leading-6 mt-4">${c.why}</p><div class="flex flex-wrap gap-3 mt-3"><a class="text-xs font-bold text-[#8f7ccc]" href="${c.applyUrl}" target="_blank" rel="noopener noreferrer">Open application ↗</a><a class="text-xs font-bold text-slate-500" href="${c.careersUrl}" target="_blank" rel="noopener noreferrer">Company careers ↗</a></div><div class="flex gap-2 mt-5"><button class="flex-1 border border-slate-200 rounded-xl py-2.5 text-sm font-bold" onclick="flagMatch(${i},false)">Not interested</button><button class="flex-1 bg-ink text-white rounded-xl py-2.5 text-sm font-bold" onclick="flagMatch(${i},true)">Want to apply</button></div></div></div></div>`).join('')}
+function getChartJobs(){try{return jobs}catch(e){return JSON.parse(localStorage.getItem('cc_jobs')||'[]')}}
+function dateForJob(j){let d=new Date(j.updated||'');if(isNaN(d.getTime()))d=new Date();d.setHours(0,0,0,0);return d}
+function chart(){
+  const momentumEl=$('#momentum'), pipelineEl=$('#pipeline'); if(!momentumEl||!pipelineEl||typeof echarts==='undefined')return;
+  const list=getChartJobs();
+  const now=new Date();
+  const rangeEl=$('#momentumRange'), range=rangeEl?rangeEl.value:'8w';
+  let totalDays=56, bucketDays=7, labelFormat='week';
+  if(range==='7d'){totalDays=7;bucketDays=1;labelFormat='day'}
+  if(range==='30d'){totalDays=30;bucketDays=5;labelFormat='day'}
+  if(range==='90d'){totalDays=90;bucketDays=15;labelFormat='day'}
+  const bucketCount=Math.ceil(totalDays/bucketDays), buckets=[];
+  for(let i=bucketCount-1;i>=0;i--){let start=new Date(now);start.setDate(now.getDate()-(i+1)*bucketDays+1);let end=new Date(now);end.setDate(now.getDate()-i*bucketDays+1);buckets.push({start,end})}
+  const labels=buckets.map(function(b){if(labelFormat==='week')return b.start.toLocaleDateString('en-US',{month:'short',day:'numeric'});return b.start.toLocaleDateString('en-US',{month:'short',day:'numeric'})});
+  const inBucket=function(j,b){let x=dateForJob(j);return x>=b.start&&x<b.end};
+  const applications=buckets.map(function(b){return list.filter(function(j){return inBucket(j,b)}).length});
+  const positive=buckets.map(function(b){return list.filter(function(j){return inBucket(j,b)&&['Screening','Interview','Offer'].includes(j.status)}).length});
+  const statusOrder=['Applied','Screening','Interview','Offer','Wishlist','Not selected'];
+  const colors={Applied:'#b8a9e8',Screening:'#f5d28c',Interview:'#a8dfd0',Offer:'#8f7ccc',Wishlist:'#d9d3e8','Not selected':'#f2b8c8'};
+  const statusData=statusOrder.map(status=>({value:list.filter(j=>j.status===status).length,name:status,itemStyle:{color:colors[status]}})).filter(x=>x.value>0);
+  const m=echarts.getInstanceByDom(momentumEl)||echarts.init(momentumEl), pipe=echarts.getInstanceByDom(pipelineEl)||echarts.init(pipelineEl);
+  m.setOption({grid:{left:35,right:20,top:20,bottom:25},tooltip:{trigger:'axis'},xAxis:{type:'category',data:labels,axisLine:{show:false},axisTick:{show:false},axisLabel:{color:'#94a3b8'}},yAxis:{type:'value',minInterval:1,splitLine:{lineStyle:{color:'#eef1f5'}},axisLabel:{color:'#94a3b8'}},series:[{name:'Applications',type:'bar',data:applications,barWidth:14,itemStyle:{color:'#b8a9e8',borderRadius:[5,5,0,0]}},{name:'Positive responses',type:'line',data:positive,smooth:true,lineStyle:{color:'#70bbaa',width:3},itemStyle:{color:'#70bbaa'}}]},true);
+  pipe.setOption({tooltip:{trigger:'item'},series:[{type:'pie',radius:['58%','78%'],center:['50%','48%'],label:{show:false},data:statusData.length?statusData:[{value:1,name:'No jobs yet',itemStyle:{color:'#e7e1eb'}}]}]},true);
+  const legendMap={Applied:'Applied',Screening:'Screening',Interview:'Interview',Offer:'Offer'};
+  Object.keys(legendMap).forEach(status=>{let b=document.querySelector('[data-pipeline="'+status+'"]');if(b)b.querySelector('b').textContent=list.filter(j=>j.status===status).length});
+  m.resize();pipe.resize();
+}
+
+function show(v){document.querySelectorAll('.view').forEach(function(x){if(x)x.classList.toggle('hidden',x.id!==v)});document.querySelectorAll('.nav').forEach(function(x){if(x)x.classList.toggle('nav-active',x.dataset.view===v)});if(v==='overview')setTimeout(function(){if(typeof chart==='function')chart()},20)}
+function openModal(id){var m=$(id);if(!m)return;m.classList.remove('hidden');m.classList.add('flex')}function closeModal(id){var m=$(id);if(!m)return;m.classList.add('hidden');m.classList.remove('flex')}
+let editingJobIndex=null;
+function editJob(index){let j=jobs[index];editingJobIndex=index;$('#jobModalTitle').textContent='Edit job';$('#saveJobBtn').textContent='Save changes';$('#fCompany').value=j.company||'';$('#fTitle').value=j.title||'';$('#fLocation').value=j.location||'';$('#fStatus').value=j.status||'Wishlist';$('#fUrl').value=j.url||'';$('#fDesc').value=j.desc||'';openModal('jobModal')}
+function saveJob(){let values={company:$('#fCompany').value||'Untitled company',title:$('#fTitle').value||'Untitled role',location:$('#fLocation').value||'Location TBD',status:$('#fStatus').value,updated:ccShortDate(new Date()),url:$('#fUrl').value||'#',desc:$('#fDesc').value};if(editingJobIndex!==null){jobs[editingJobIndex]={...jobs[editingJobIndex],...values};editingJobIndex=null}else{jobs.unshift({...values,match:0})}localStorage.setItem('cc_jobs',JSON.stringify(jobs));render();closeModal('jobModal');show('tracker');$('#jobModalTitle').textContent='Add a job';$('#saveJobBtn').textContent='Save job'}
+
+function populateDoc(){ $('#docJob').innerHTML=jobs.map((j,i)=>`<option value="${i}">${esc(j.title)} · ${esc(j.company)}</option>`).join(''); $('#docJob').onchange=updatePreview; updatePreview() }
+function updatePreview(){let j=jobs[$('#docJob').value||0];$('#docPreview').innerHTML=`<b>${esc(j.title)} — ${esc(j.company)}</b><br><span class="text-xs text-slate-400">${esc(j.location)}</span><p class="mt-3">Targeting your resume around: <b>cross-functional leadership</b>, <b>process optimization</b>, <b>analytics</b>, and <b>stakeholder management</b>.</p><div class="mt-3 text-xs text-emerald-700 font-bold">Estimated ATS match after tailoring: ${Math.max(j.match,88)}%</div>`}
+function openTailor(){ $('#docTitle').textContent='Tailor resume';$('#generateDoc').textContent='Generate ATS-optimized DOCX';populateDoc();openModal('docModal') } function openLetter(){ $('#docTitle').textContent='Create cover letter';$('#generateDoc').textContent='Generate cover letter DOCX';populateDoc();openModal('docModal') }
+function downloadDoc(name){let text=`${name}\n\nMonchelle\nBaltimore, MD | monchelle@example.com\n\nProfessional Summary\nProduct operations leader with 8+ years of experience in healthcare technology, process improvement, stakeholder management, and analytics.\n\nCore Skills\nProduct Operations | Program Management | Process Improvement | Stakeholder Management | Analytics\n\nThis demo document was generated by Career Command Center.`;let blob=new Blob([text],{type:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'});let a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name+'.docx';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500)}
+function flagMatch(i,want){let c=candidates[i];if(want){jobs.unshift({company:c.company,title:c.title,location:c.mode,status:'Wishlist',match:c.match,updated:ccShortDate(new Date()),url:c.applyUrl||c.url||c.careersUrl,desc:''});localStorage.setItem('cc_jobs',JSON.stringify(jobs));render();alert('Added to your wishlist.')}else{alert('Got it — this match is hidden from your active list.')}}
+function renderResume(){let r=JSON.parse(localStorage.getItem('cc_resume')||'null');let st=$('#resumeStatus'), rem=$('#removeResume'), use=$('#resumeUse');if(r){st.innerHTML=`<span class="font-bold text-[#8f7ccc]">${esc(r.name)}</span><span class="text-xs text-slate-400"> · ${Math.round(r.size/1024)} KB · uploaded locally</span>`;rem.classList.remove('hidden');use.classList.remove('hidden')}else{st.textContent='No resume uploaded yet.';rem.classList.add('hidden');use.classList.add('hidden')}}
+const resumeUpload=$('#resumeUpload');if(resumeUpload)resumeUpload.addEventListener('change',e=>{let f=e.target.files[0];if(!f)return;localStorage.setItem('cc_resume',JSON.stringify({name:f.name,size:f.size,type:f.type,uploaded:ccShortDate(new Date())}));renderResume()});if($('#removeResume'))$('#removeResume').onclick=()=>{localStorage.removeItem('cc_resume');$('#resumeUpload').value='';renderResume()};if($('#resumeUse'))$('#resumeUse').onclick=()=>{show('documents');openTailor()};
+document.querySelectorAll('.nav').forEach(b=>b.onclick=()=>show(b.dataset.view));document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>show(b.dataset.go));document.addEventListener('click',e=>{let btn=e.target.closest('.edit-job');if(btn){e.preventDefault();editJob(Number(btn.dataset.index))}});function resetJobForm(){editingJobIndex=null;$('#jobModalTitle').textContent='Add a job';$('#saveJobBtn').textContent='Save job';['fCompany','fTitle','fLocation','fUrl','fDesc'].forEach(id=>{let el=$('#'+id);if(el)el.value=''});if($('#fStatus'))$('#fStatus').value='Wishlist'}
+function openAddJob(){resetJobForm();openModal('jobModal')}
+const addJobButton=$('#addJob');if(addJobButton)addJobButton.addEventListener('click',openAddJob);
+const completeProfileButton=$('#completeProfile');if(completeProfileButton)completeProfileButton.addEventListener('click',()=>show('documents'));
+$('#trackerSearch').oninput=render;$('#statusFilter').onchange=render;$('#searchJobs').onclick=()=>{let b=$('#searchJobs');b.textContent='Searching live listings…';setTimeout(()=>{b.textContent='✓ Search refreshed';let u=$('#jobSearchUpdated');if(u)u.textContent='Results last checked September 16, 2026 · employer application links below'},900)};$('#generateDoc').onclick=()=>{let j=jobs[$('#docJob').value||0];downloadDoc(($('#docTitle').textContent.includes('cover')?'Cover Letter - ':'Tailored Resume - ')+j.company);$('#generateDoc').textContent='✓ Downloaded — generate again';setTimeout(()=>closeModal('docModal'),700)};render();chart();renderResume();
+</script>
+
+<script>
+/* Chrome compatibility layer: explicit handlers for the two core tracker actions. */
+(function () {
+  'use strict';
+  function byId(id) { return document.getElementById(id); }
+  function openJobModal(index) {
+    var modal = byId('jobModal');
+    if (!modal) return;
+    window.ccEditingJobIndex = (typeof index === 'number') ? index : null;
+    var title = byId('jobModalTitle'), save = byId('saveJobBtn');
+    if (title) title.textContent = window.ccEditingJobIndex === null ? 'Add a job' : 'Edit job';
+    if (save) save.textContent = window.ccEditingJobIndex === null ? 'Save job' : 'Save changes';
+    var j = window.ccEditingJobIndex === null ? {} : (window.ccJobsData || [])[window.ccEditingJobIndex] || {};
+    [['fCompany','company'],['fTitle','title'],['fLocation','location'],['fUrl','url'],['fDesc','desc']].forEach(function (pair) {
+      var el = byId(pair[0]); if (el) el.value = j[pair[1]] || '';
+    });
+    var status = byId('fStatus'); if (status) status.value = j.status || 'Wishlist';
+    modal.classList.remove('hidden'); modal.classList.add('flex');
+  }
+  function getJobs() {
+    try { return jobs; } catch (e) {
+      window.ccJobsData = JSON.parse(localStorage.getItem('cc_jobs') || '[]');
+      return window.ccJobsData;
+    }
+  }
+  function saveJobFromChrome() {
+    var list = getJobs();
+    var existing = window.ccEditingJobIndex;
+    var value = function (id, fallback) { var el = byId(id); return el && el.value.trim() ? el.value.trim() : fallback; };
+    var item = {
+      company: value('fCompany','Untitled company'), title: value('fTitle','Untitled role'),
+      location: value('fLocation','Location TBD'), status: value('fStatus','Wishlist'),
+      url: value('fUrl','#'), desc: value('fDesc',''), updated: 'Sep 16, 2026'
+    };
+    if (existing !== null && list[existing]) list[existing] = Object.assign({}, list[existing], item);
+    else list.unshift(Object.assign({match:0}, item));
+    localStorage.setItem('cc_jobs', JSON.stringify(list));
+    window.ccJobsData = list;
+    if (typeof render === 'function') render();
+    var modal = byId('jobModal'); if (modal) { modal.classList.add('hidden'); modal.classList.remove('flex'); }
+    if (typeof show === 'function') show('tracker');
+    window.ccEditingJobIndex = null;
+  }
+  function wire() {
+    var add = byId('addJob');
+    if (add) add.onclick = function (event) { event.preventDefault(); openJobModal(null); };
+    var save = byId('saveJobBtn');
+    if (save) { save.type = 'button'; save.onclick = function (event) { event.preventDefault(); saveJobFromChrome(); }; }
+    var profile = byId('completeProfile');
+    if (profile) profile.onclick = function (event) { event.preventDefault(); if (typeof show === 'function') show('documents'); };
+    document.addEventListener('click', function (event) {
+      var edit = event.target.closest ? event.target.closest('.edit-job') : null;
+      if (!edit) return;
+      event.preventDefault(); event.stopPropagation();
+      var index = parseInt(edit.getAttribute('data-index'), 10);
+      if (!isNaN(index)) openJobModal(index);
+    }, true);
+    window.ccJobsData = getJobs();
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', wire); else wire();
+})();
+</script>
+
+<script>
+(function(){
+  'use strict';
+  function el(id){return document.getElementById(id)}
+  function currentJobs(){return (typeof jobs!=='undefined')?jobs:JSON.parse(localStorage.getItem('cc_jobs')||'[]')}
+  function persist(list){localStorage.setItem('cc_jobs',JSON.stringify(list));window.ccJobsData=list;if(typeof render==='function')render()}
+  function closeJob(){var m=el('jobModal');if(m){m.classList.add('hidden');m.classList.remove('flex')}}
+  function deleteJob(index){var list=currentJobs();var j=list[index];if(!j)return;if(!window.confirm('Delete '+(j.title||'this job')+' from your tracker?'))return;list.splice(index,1);persist(list)}
+  function getFormJob(){return {company:(el('fCompany')?.value||'Untitled company').trim(),title:(el('fTitle')?.value||'Untitled role').trim(),location:(el('fLocation')?.value||'Location TBD').trim(),status:el('fStatus')?.value||'Wishlist',url:(el('fUrl')?.value||'#').trim(),desc:(el('fDesc')?.value||'').trim()}}
+  function analyzeMatch(){
+    var f=getFormJob(), uploaded=JSON.parse(localStorage.getItem('cc_resume')||'null');
+    var text=(f.desc+' '+f.title+' '+f.company).toLowerCase();
+    var skills=['operations','program','project','product','process','analytics','strategy','stakeholder','healthcare','leadership','implementation','data','management','improvement'];
+    var hits=skills.filter(function(x){return text.indexOf(x)>=0}).length;
+    var score=Math.min(98,Math.max(35,Math.round(48+hits*3+(uploaded?12:0))));
+    var status=el('matchStatus');if(status)status.innerHTML='Resume comparison complete: <b class="text-[#8f7ccc]">'+score+'% match</b>'+(uploaded?' · uploaded resume considered.':' · upload a resume for a more complete comparison.');
+    window.ccPendingMatch=score;return score;
+  }
+  function saveWithMatch(){
+    var list=currentJobs(), idx=(window.ccEditingJobIndex!==undefined)?window.ccEditingJobIndex:null, item=getFormJob();
+    var score=(typeof window.ccPendingMatch==='number')?window.ccPendingMatch:analyzeMatch();
+    item.updated=ccShortDate(new Date()); item.match=score;
+    if(idx!==null && idx!==undefined && list[idx]) list[idx]=Object.assign({},list[idx],item); else list.unshift(Object.assign({match:score},item));
+    persist(list); window.ccPendingMatch=null; closeJob(); if(typeof show==='function')show('tracker');
+  }
+  function handleUpload(file){
+    if(!file)return;
+    var allowed=/\.(pdf|doc|docx)$/i.test(file.name);
+    var status=el('resumeStatus');
+    if(!allowed){if(status)status.textContent='Please choose a PDF, DOC, or DOCX file.';return}
+    var record={name:file.name,size:file.size,type:file.type||'application/octet-stream',uploaded:ccShortDate(new Date())};
+    localStorage.setItem('cc_resume',JSON.stringify(record));
+    if(status)status.innerHTML='<span class="font-bold text-[#8f7ccc]">'+esc(file.name)+'</span><span class="text-xs text-slate-400"> · '+Math.max(1,Math.round(file.size/1024))+' KB · uploaded locally</span>';
+    el('removeResume')?.classList.remove('hidden');el('resumeUse')?.classList.remove('hidden');
+  }
+  function wireExtras(){
+    document.addEventListener('click',function(e){
+      var del=e.target.closest?.('.delete-job');if(del){e.preventDefault();e.stopPropagation();deleteJob(parseInt(del.dataset.index,10));return}
+    },true);
+    var compare=el('compareMatchBtn');if(compare)compare.onclick=function(e){e.preventDefault();analyzeMatch()};
+    var save=el('saveJobBtn');if(save)save.onclick=function(e){e.preventDefault();saveWithMatch()};
+    var upload=el('resumeUpload');if(upload){upload.onchange=function(e){handleUpload(e.target.files&&e.target.files[0])};upload.onclick=function(e){e.stopPropagation()}}
+    var drop=el('resumeUpload')?.closest('label');if(drop){['dragenter','dragover'].forEach(function(ev){drop.addEventListener(ev,function(e){e.preventDefault();drop.classList.add('bg-[#fff1f6]')})});['dragleave','drop'].forEach(function(ev){drop.addEventListener(ev,function(e){e.preventDefault();drop.classList.remove('bg-[#fff1f6]')})});drop.addEventListener('drop',function(e){handleUpload(e.dataTransfer.files&&e.dataTransfer.files[0])})}
+    var remove=el('removeResume');if(remove)remove.onclick=function(){localStorage.removeItem('cc_resume');if(upload)upload.value='';if(typeof renderResume==='function')renderResume()};
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',wireExtras);else wireExtras();
+})();
+</script>
+
+<div id="profileModal" class="hidden fixed inset-0 z-40 modal-bg items-center justify-center p-4"><div class="bg-white rounded-2xl w-full max-w-2xl p-6 shadow-2xl max-h-[90vh] overflow-y-auto"><div class="flex justify-between items-center mb-5"><div><h3 class="text-xl font-black">Update master resume</h3><p class="text-sm text-slate-400 mt-1">These details power your tailored resumes and cover letters.</p></div><button id="closeProfileModal" type="button" class="text-slate-400 text-2xl">×</button></div><div class="grid md:grid-cols-2 gap-4"><label class="text-sm font-bold">Full name<input id="profileName" class="mt-2 w-full rounded-xl border border-slate-200 p-3 font-normal" value="Monchelle"></label><label class="text-sm font-bold">Email<input id="profileEmail" class="mt-2 w-full rounded-xl border border-slate-200 p-3 font-normal" value="monchelle@example.com"></label><label class="text-sm font-bold md:col-span-2">Headline<input id="profileHeadline" class="mt-2 w-full rounded-xl border border-slate-200 p-3 font-normal" placeholder="Product operations leader"></label><label class="text-sm font-bold md:col-span-2">Professional summary<textarea id="profileSummary" class="mt-2 w-full rounded-xl border border-slate-200 p-3 font-normal h-28" placeholder="Summarize your experience…"></textarea></label><label class="text-sm font-bold md:col-span-2">Skills<textarea id="profileSkills" class="mt-2 w-full rounded-xl border border-slate-200 p-3 font-normal h-24" placeholder="Separate skills with commas"></textarea></label><label class="text-sm font-bold md:col-span-2">Experience<textarea id="profileExperience" class="mt-2 w-full rounded-xl border border-slate-200 p-3 font-normal h-32" placeholder="Paste your key experience and accomplishments…"></textarea></label></div><div class="flex gap-3 mt-5"><button id="cancelProfile" type="button" class="flex-1 border border-slate-200 rounded-xl py-3 font-bold">Cancel</button><button id="saveProfile" type="button" class="flex-1 bg-ink text-white rounded-xl py-3 font-bold">Save master resume</button></div><div id="profileSaved" class="text-xs text-emerald-700 font-bold mt-3"></div></div></div>
+
+<script>
+(function(){
+'use strict';
+var $id=function(id){return document.getElementById(id)};
+function list(){try{return jobs}catch(e){return JSON.parse(localStorage.getItem('cc_jobs')||'[]')}}
+function profile(){return Object.assign({name:'Monchelle',email:'monchelle@example.com',headline:'Product operations leader',summary:'Product operations leader with 8+ years across healthcare technology, process improvement, stakeholder management, and analytics.',skills:'Product Operations, Program Management, Process Improvement, Stakeholder Management, Analytics',experience:''},JSON.parse(localStorage.getItem('cc_profile')||'{}'))}
+function updateWishlistReminder(){
+ var a=list(), now=new Date(), dayMs=86400000, threshold=7;
+ var age=function(j){var d=new Date(j.updated||'');if(isNaN(d.getTime()))return 0;return Math.max(0,Math.floor((now-d)/dayMs))};
+ var wishlist=a.filter(function(j){return j.status==='Wishlist'}).sort(function(x,y){return age(y)-age(x)});
+ var aging=wishlist.filter(function(j){return age(j)>=threshold});
+ var box=$id('wishlistReminder'), badge=$id('wishlistReminderBadge'), rows=$id('wishlistReminderList');
+ if(!box)return;
+ box.classList.remove('hidden');
+ if(badge)badge.textContent=aging.length?aging.length+' aging · '+wishlist.length+' total':wishlist.length+' saved';
+ if(rows){
+   if(!wishlist.length){rows.innerHTML='<div class="md:col-span-2 rounded-xl border border-dashed border-[#e8d7ad] bg-white/60 p-4 text-sm text-[#9a805b]">No wishlist jobs yet. Add promising opportunities from Job Matches or the Application Tracker.</div>';return}
+   rows.innerHTML=wishlist.slice(0,6).map(function(j){var idx=a.indexOf(j), days=age(j), urgency=days>=threshold?' · submit ASAP':'';return '<button type="button" class="text-left rounded-xl bg-white/70 border border-[#f2dfbb] p-3 hover:bg-white" data-wishlist-index="'+idx+'"><div class="font-bold text-sm text-[#6f5830] truncate">'+esc(j.title||'Untitled role')+'</div><div class="text-xs text-[#9a805b] mt-1">'+esc(j.company||'Company TBD')+' · '+days+' day'+(days===1?'':'s')+' in wishlist'+(urgency?' <b class="text-[#b56b62]">'+urgency+'</b>':'')+'</div></button>'}).join('');
+ }
+}
+
+function updateMetrics(){
+ var a=list(), now=new Date(), dayMs=86400000;
+ var appliedStatuses=['Applied','Screening','Interview','Offer','Not selected'];
+ var activeStatuses=['Applied','Screening','Interview'];
+ var active=a.filter(function(j){return activeStatuses.includes(j.status)}), interviews=a.filter(function(j){return j.status==='Interview'}), scored=a.filter(function(j){return Number(j.match)>0});
+ var dateOf=function(j){var d=new Date(j.updated||'');return isNaN(d.getTime())?new Date():d};
+ var daysAgo=function(j){return Math.floor((now-dateOf(j))/dayMs)};
+ var current30=a.filter(function(j){return daysAgo(j)>=0&&daysAgo(j)<30&&appliedStatuses.includes(j.status)}), previous30=a.filter(function(j){return daysAgo(j)>=30&&daysAgo(j)<60&&appliedStatuses.includes(j.status)});
+ var currentWeekInterviews=interviews.filter(function(j){return daysAgo(j)>=0&&daysAgo(j)<7}).length, previousWeekInterviews=interviews.filter(function(j){return daysAgo(j)>=7&&daysAgo(j)<14}).length;
+ var currentScores=a.filter(function(j){return daysAgo(j)>=0&&daysAgo(j)<30&&Number(j.match)>0}), previousScores=a.filter(function(j){return daysAgo(j)>=30&&daysAgo(j)<60&&Number(j.match)>0});
+ var average=function(rows){return rows.length?rows.reduce(function(t,j){return t+Number(j.match||0)},0)/rows.length:null};
+ var avg=average(scored), currentAvg=average(currentScores), previousAvg=average(previousScores);
+ var applications=a.filter(function(j){return appliedStatuses.includes(j.status)}), earliest=applications.length?applications.map(dateOf).sort(function(x,y){return x-y})[0]:null, elapsed=earliest?Math.max(1,Math.floor((now-earliest)/dayMs)+1):0, daily=applications.length?applications.length/elapsed:0;
+ var set=function(id,v){var x=$id(id);if(x)x.textContent=v};
+ var trend=function(current,previous,suffix){if(previous===null||previous===undefined)return 'No prior data';var diff=current-previous;if(diff===0)return 'No change';return (diff>0?'↑ ':'↓ ')+Math.abs(diff)+(suffix||'')+' vs prior period'};
+ var pctTrend=function(current,previous){if(!previous)return current?'↑ new':'No prior data';var pct=Math.round((current-previous)/previous*100);return pct===0?'No change':(pct>0?'↑ ':'↓ ')+Math.abs(pct)+'% vs prior 30 days'};
+ set('metricActive',active.length);set('metricActiveSub','across '+new Set(active.map(function(j){return j.company})).size+' companies');set('metricActiveTrend',pctTrend(current30.length,previous30.length));
+ set('metricInterviews',interviews.length);set('metricInterviewsSub',interviews.length===1?'tracked interview':'tracked interviews');set('metricInterviewTrend',trend(currentWeekInterviews,previousWeekInterviews,' this week'));
+ set('metricMatch',avg===null?'—':Math.round(avg)+'%');set('metricMatchSub',scored.length?'based on '+scored.length+' scored job'+(scored.length===1?'':'s'):'compare a job to calculate');set('metricMatchTrend',currentAvg!==null&&previousAvg!==null?trend(Math.round(currentAvg),Math.round(previousAvg),' pts'):currentAvg!==null?'New this period':'No prior data');
+ set('metricDaily',daily.toFixed(1));set('metricDailySub',applications.length?'from '+applications.length+' applications since '+earliest.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):'add an application to begin tracking');set('metricDailyTrend',applications.length?'live tracker average':'—');
+}
+
+function refresh(){if(typeof render==='function')render();updateMetrics();updateWishlistReminder();setTimeout(chart,20);}
+function openProfile(){var p=profile();[['profileName','name'],['profileEmail','email'],['profileHeadline','headline'],['profileSummary','summary'],['profileSkills','skills'],['profileExperience','experience']].forEach(function(x){var e=$id(x[0]);if(e)e.value=p[x[1]]||''});var m=$id('profileModal');if(m){m.classList.remove('hidden');m.classList.add('flex')}}
+function closeProfile(){var m=$id('profileModal');if(m){m.classList.add('hidden');m.classList.remove('flex')}}
+function saveProfile(){var p={name:$id('profileName').value.trim()||'Monchelle',email:$id('profileEmail').value.trim(),headline:$id('profileHeadline').value.trim(),summary:$id('profileSummary').value.trim(),skills:$id('profileSkills').value.trim(),experience:$id('profileExperience').value.trim(),updated:ccShortDate(new Date())};localStorage.setItem('cc_profile',JSON.stringify(p));updateMasterPreview();var saved=$id('profileSaved');if(saved)saved.textContent='Master resume updated.';setTimeout(closeProfile,600);}
+function docMode(mode){var jobsList=list(), m=$id('docModal'), title=$id('docTitle'), gen=$id('generateDoc');if(!jobsList.length){alert('Add a job to your tracker first.');return}if(title)title.textContent=mode==='letter'?'Create cover letter':'Tailor resume';if(gen){gen.textContent=mode==='letter'?'Generate cover letter DOCX':'Generate ATS-optimized DOCX';gen.dataset.mode=mode}if(typeof populateDoc==='function')populateDoc();if(m){m.classList.remove('hidden');m.classList.add('flex')}window.ccDocMode=mode;}
+function updateDocPreview(){var a=list(), idx=Number(($id('docJob')||{}).value||0), j=a[idx]||{}, p=profile(), score=Math.max(Number(j.match||0),88);var preview=$id('docPreview');if(preview)preview.innerHTML='<b>'+esc(j.title||'Selected role')+' — '+esc(j.company||'')+'</b><br><span class="text-xs text-slate-400">'+esc(j.location||'')+'</span><p class="mt-3">Using <b>'+esc(p.headline)+'</b> and emphasizing <b>'+esc(p.skills||'your strongest skills')+'</b>.</p><div class="mt-3 text-xs text-emerald-700 font-bold">Estimated ATS match after tailoring: '+score+'%</div>'}
+function generateDocument(){var a=list(), j=a[Number(($id('docJob')||{}).value||0)]||{}, p=profile(), mode=window.ccDocMode||(($id('docTitle')||{}).textContent||'').toLowerCase().includes('cover')?'letter':'resume';var text=mode==='letter'?p.name+'\n'+p.email+'\n\nDear Hiring Manager,\n\nI am excited to apply for the '+j.title+' role at '+j.company+'. '+p.summary+' My experience includes '+p.skills+'. I would welcome the opportunity to contribute to your team.\n\nSincerely,\n'+p.name:p.name+'\n'+p.email+'\n\n'+p.headline+'\n\nProfessional Summary\n'+p.summary+'\n\nSkills\n'+p.skills+'\n\nExperience\n'+p.experience+'\n\nTarget Role\n'+j.title+' — '+j.company;var blob=new Blob([text],{type:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'}), aEl=document.createElement('a');aEl.href=URL.createObjectURL(blob);aEl.download=(mode==='letter'?'Cover Letter - ':'Tailored Resume - ')+(j.company||'Job')+'.docx';document.body.appendChild(aEl);aEl.click();aEl.remove();setTimeout(function(){URL.revokeObjectURL(aEl.href)},500)}
+function updateMasterPreview(){var p=profile(), box=$id('masterResumePreview'), stamp=$id('masterResumeUpdated');if(box)box.innerHTML='<b>'+esc(p.headline||'Professional profile')+'</b><br>'+esc(p.summary||'Add a professional summary in Edit profile.')+'<br><span class="text-xs text-slate-400">Skills: '+esc(p.skills||'Add skills in Edit profile.')+'</span>';if(stamp&&p.updated)stamp.textContent='Updated '+p.updated+' · DOCX'}
+function wire(){var c=config();if(c){id('supabaseProjectUrl').value=c.url||'';id('supabaseAnonKey').value=c.key||'';if(c.url&&c.key)connect()}else if(id('supabaseProjectUrl'))id('supabaseProjectUrl').value='https://cznnvfagogvxlkqoqkkf.supabase.co';var cb=id('connectSupabase');if(cb)cb.onclick=connect;var reset=id('resetSupabase');if(reset)reset.onclick=function(){localStorage.removeItem(CONFIG_KEY);client=null;id('supabaseAnonKey').value='';setStatus('Not connected','');updateAuthUi(null);cloudResumeStatus('Paste the current key from Supabase Project Settings → API.',false)};var si=id('supabaseSignIn');if(si)si.onclick=signIn;var su=id('supabaseSignUp');if(su)su.onclick=signUp;if(client&&client.auth)client.auth.onAuthStateChange(function(event,session){updateAuthUi(session&&session.user);if(session&&session.user)loadCloudProfile(session.user.id)});}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',wire);else wire();
+window.ccRefreshOverview=refresh;
+})();
+</script>
+
+<script>
+(function(){
+  function updateOverviewCharts(){if(typeof chart==='function'){try{chart()}catch(e){}}}
+  document.addEventListener('click',function(){setTimeout(function(){updateOverviewCharts();if(window.ccRefreshOverview)window.ccRefreshOverview()},120)},true);
+  window.addEventListener('resize',function(){setTimeout(updateOverviewCharts,50)});
+})();
+</script>
+
+<script>
+(function(){
+  'use strict';
+  function byId(id){return document.getElementById(id)}
+  function xmlEscape(value){return String(value==null?'':value).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&apos;')}
+  function safeName(value){return String(value||'Job').replace(/[\\/:*?"<>|]/g,'-').replace(/\s+/g,' ').trim().slice(0,90)}
+  function getProfile(){try{return Object.assign({name:'Monchelle',email:'monchelle@example.com',headline:'Product operations leader',summary:'',skills:'',experience:''},JSON.parse(localStorage.getItem('cc_profile')||'{}'))}catch(e){return {name:'Monchelle',email:'monchelle@example.com',headline:'Product operations leader',summary:'',skills:'',experience:''}}}
+  function getJobs(){try{return jobs}catch(e){return JSON.parse(localStorage.getItem('cc_jobs')||'[]')}}
+  function selectedJob(){var a=getJobs(), select=byId('docJob'), idx=select?Number(select.value||0):0;return a[idx]||{company:'Target company',title:'Target role',location:'',desc:''}}
+  function paragraph(text,style){return '<w:p>'+((style)?'<w:pPr><w:pStyle w:val="'+style+'"/></w:pPr>':'')+'<w:r><w:t xml:space="preserve">'+xmlEscape(text)+'</w:t></w:r></w:p>'}
+  function bullet(text){return '<w:p><w:pPr><w:numPr><w:ilvl w:val="0"/><w:numId w:val="1"/></w:numPr></w:pPr><w:r><w:t xml:space="preserve">'+xmlEscape(text)+'</w:t></w:r></w:p>'}
+  function docXml(body){return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>'+body+'<w:sectPr><w:pgSz w:w="12240" w:h="15840"/><w:pgMar w:top="1440" w:right="1440" w:bottom="1440" w:left="1440"/></w:sectPr></w:body></w:document>'}
+  function stylesXml(){return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:docDefaults><w:rPrDefault><w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial"/><w:sz w:val="22"/></w:rPr></w:rPrDefault></w:docDefaults><w:style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/><w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial"/><w:sz w:val="22"/></w:rPr></w:style><w:style w:type="paragraph" w:styleId="Heading1"><w:name w:val="heading 1"/><w:basedOn w:val="Normal"/><w:uiPriority w:val="9"/><w:qFormat/><w:rPr><w:b/><w:sz w:val="28"/></w:rPr></w:style></w:styles>'}
+  function contentTypes(){return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/><Override PartName="/word/numbering.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.numbering+xml"/></Types>'}
+  function rootRels(){return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>'}
+  function docRels(){return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/numbering" Target="numbering.xml"/></Relationships>'}
+  function numberingXml(){return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:numbering xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:abstractNum w:abstractNumId="0"><w:multiLevelType w:val="singleLevel"/><w:lvl w:ilvl="0"><w:start w:val="1"/><w:numFmt w:val="bullet"/><w:lvlText w:val="•"/><w:lvlJc w:val="left"/></w:lvl></w:abstractNum><w:num w:numId="1"><w:abstractNumId w:val="0"/></w:num></w:numbering>'}
+  function loadZip(){return new Promise(function(resolve,reject){if(window.JSZip)return resolve(window.JSZip);var script=document.createElement('script');script.src='https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js';script.onload=function(){resolve(window.JSZip)};script.onerror=function(){reject(new Error('The DOCX generator library could not be loaded.'))};document.head.appendChild(script)})}
+  function makeBody(mode){var p=getProfile(),j=selectedJob(),body='';if(mode==='letter'){body+=paragraph(p.name);body+=paragraph(p.email);body+=paragraph('');body+=paragraph(new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}));body+=paragraph('');body+=paragraph('Dear Hiring Manager,');body+=paragraph('');body+=paragraph('I am excited to apply for the '+j.title+' position at '+j.company+'. '+(p.summary||'My background includes experience that aligns with this opportunity.'));body+=paragraph('');body+=paragraph('My relevant skills include '+(p.skills||'cross-functional leadership, process improvement, stakeholder management, and analytics')+'. I would welcome the opportunity to contribute to your team and discuss how my experience can support this role.');body+=paragraph('');body+=paragraph('Thank you for your consideration.');body+=paragraph('');body+=paragraph('Sincerely,');body+=paragraph(p.name)}else{body+=paragraph(p.name);body+=paragraph(p.email);body+=paragraph(p.headline||'Professional Profile');body+=paragraph('');body+=paragraph('PROFESSIONAL SUMMARY','Heading1');body+=paragraph(p.summary||'Product operations leader with experience in healthcare technology, process improvement, stakeholder management, and analytics.');body+=paragraph('');body+=paragraph('CORE SKILLS','Heading1');(p.skills||'Product Operations, Program Management, Process Improvement, Stakeholder Management, Analytics').split(/[,;\n]+/).map(function(x){return x.trim()}).filter(Boolean).forEach(function(x){body+=bullet(x)});body+=paragraph('');body+=paragraph('PROFESSIONAL EXPERIENCE','Heading1');body+=paragraph(p.experience||'Experience details can be updated from Edit profile.');body+=paragraph('');body+=paragraph('TARGET ROLE','Heading1');body+=paragraph(j.title+' — '+j.company);body+=paragraph(j.location||'')}return body}
+  function downloadDocx(mode){var button=byId('generateDoc'), old=button?button.textContent:'';if(button)button.textContent='Preparing DOCX…';return loadZip().then(function(JSZip){var zip=new JSZip();zip.file('[Content_Types].xml',contentTypes());zip.folder('_rels').file('.rels',rootRels());var word=zip.folder('word');word.file('document.xml',docXml(makeBody(mode)));word.file('styles.xml',stylesXml());word.file('numbering.xml',numberingXml());word.folder('_rels').file('document.xml.rels',docRels());return zip.generateAsync({type:'blob',mimeType:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'})}).then(function(blob){var j=selectedJob(),link=document.createElement('a');link.href=URL.createObjectURL(blob);link.download=(mode==='letter'?'Cover Letter - ':'Tailored Resume - ')+safeName(j.company)+'.docx';document.body.appendChild(link);link.click();link.remove();setTimeout(function(){URL.revokeObjectURL(link.href)},1000);if(button){button.textContent='Downloaded valid DOCX';setTimeout(function(){button.textContent=mode==='letter'?'Generate cover letter DOCX':'Generate ATS-optimized DOCX'},1800)}}).catch(function(err){console.error(err);if(button)button.textContent=old||'Generate DOCX';alert('The DOCX could not be generated. Please try again in Chrome.')})}
+  function wireValidDocs(){var resume=byId('tailorResumeBtn'),letter=byId('coverLetterBtn'),generate=byId('generateDoc');if(resume)resume.onclick=function(e){e.preventDefault();window.ccDocMode='resume';if(typeof docMode==='function')docMode('resume')};if(letter)letter.onclick=function(e){e.preventDefault();window.ccDocMode='letter';if(typeof docMode==='function')docMode('letter')};if(generate)generate.onclick=function(e){e.preventDefault();var mode=window.ccDocMode||generate.dataset.mode||'resume';downloadDocx(mode)}}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',wireValidDocs);else wireValidDocs();
+})();
+</script>
+
+<script>
+(function(){
+  'use strict';
+  function id(x){return document.getElementById(x)}
+  function getJobsSafe(){try{return jobs}catch(e){try{return JSON.parse(localStorage.getItem('cc_jobs')||'[]')}catch(_){return []}}}
+  function escDoc(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+  function openGenerator(mode){
+    var list=getJobsSafe();
+    if(!list.length){alert('Add at least one job to the Application Tracker before generating a tailored resume or cover letter.');return}
+    window.ccDocMode=mode;
+    var title=id('docTitle'), button=id('generateDoc'), select=id('docJob'), preview=id('docPreview'), modal=id('docModal');
+    if(title)title.textContent=mode==='letter'?'Create cover letter':'Tailor resume';
+    if(button){button.dataset.mode=mode;button.textContent=mode==='letter'?'Generate cover letter DOCX':'Generate ATS-optimized DOCX'}
+    if(select){select.innerHTML=list.map(function(j,i){return '<option value="'+i+'">'+escDoc(j.title||'Untitled role')+' · '+escDoc(j.company||'Company TBD')+'</option>'}).join('');select.value='0'}
+    var j=list[0]||{}, profileData={};try{profileData=JSON.parse(localStorage.getItem('cc_profile')||'{}')}catch(e){}
+    if(preview)preview.innerHTML='<b>'+escDoc(j.title||'Selected role')+' — '+escDoc(j.company||'')+'</b><br><span class="text-xs text-slate-400">'+escDoc(j.location||'')+'</span><p class="mt-3">'+(mode==='letter'?'Your cover letter will be customized to this role using your master-resume profile.':'Your resume will be tailored to this role using your master-resume profile and job description.')+'</p><div class="mt-3 text-xs text-emerald-700 font-bold">Estimated ATS match: '+Math.max(Number(j.match||0),88)+'%</div>';
+    if(modal){modal.classList.remove('hidden');modal.classList.add('flex')}
+  }
+  function closeGenerator(){var m=id('docModal');if(m){m.classList.add('hidden');m.classList.remove('flex')}}
+  function goDocuments(){if(typeof show==='function')show('documents');else document.querySelectorAll('.view').forEach(function(v){v.classList.toggle('hidden',v.id!=='documents')})}
+  document.addEventListener('click',function(e){
+    var target=e.target.closest?e.target.closest('#resumeUse, #tailorResumeBtn, #coverLetterBtn, #docModal [data-close-generator]'):null;
+    if(!target)return;
+    e.preventDefault();e.stopImmediatePropagation();
+    if(target.id==='resumeUse'){goDocuments();setTimeout(function(){openGenerator('resume')},30)}
+    else if(target.id==='tailorResumeBtn')openGenerator('resume');
+    else if(target.id==='coverLetterBtn')openGenerator('letter');
+    else closeGenerator();
+  },true);
+})();
+</script>
+
+
+<script>
+(function(){
+  'use strict';
+  function byId(id){return document.getElementById(id)}
+  function esc(v){return String(v==null?'':v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&apos;')}
+  function profile(){try{return Object.assign({name:'Monchelle',email:'monchelle@example.com',headline:'Product operations leader',summary:'',skills:'',experience:''},JSON.parse(localStorage.getItem('cc_profile')||'{}'))}catch(e){return {name:'Monchelle',email:'monchelle@example.com',headline:'Product operations leader',summary:'',skills:'',experience:''}}}
+  function jobsList(){try{return jobs}catch(e){return JSON.parse(localStorage.getItem('cc_jobs')||'[]')}}
+  function job(){var a=jobsList(),sel=byId('docJob'),idx=sel?Number(sel.value||0):0;return a[idx]||{company:'Target company',title:'Target role',location:''}}
+  function textParts(value,max){return String(value||'').replace(/\r/g,'').split(/\n|[•·]/).map(function(x){return x.trim()}).filter(Boolean).slice(0,max)}
+  function p(text,style){return '<w:p><w:pPr><w:spacing w:before="0" w:after="80" w:line="220"/>'+(style?'<w:pStyle w:val="'+style+'"/>':'')+'</w:pPr><w:r><w:t xml:space="preserve">'+esc(text)+'</w:t></w:r></w:p>'}
+  function heading(text){return '<w:p><w:pPr><w:spacing w:before="160" w:after="60"/><w:pStyle w:val="Heading1"/></w:pPr><w:r><w:t>'+esc(text)+'</w:t></w:r></w:p>'}
+  function bullet(text){return '<w:p><w:pPr><w:spacing w:before="0" w:after="35" w:line="210"/><w:numPr><w:ilvl w:val="0"/><w:numId w:val="1"/></w:numPr></w:pPr><w:r><w:t xml:space="preserve">'+esc(text)+'</w:t></w:r></w:p>'}
+  function docXml(body){return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>'+body+'<w:sectPr><w:pgSz w:w="12240" w:h="15840"/><w:pgMar w:top="720" w:right="900" w:bottom="720" w:left="900" w:header="360" w:footer="360"/></w:sectPr></w:body></w:document>'}
+  function styles(){return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:docDefaults><w:rPrDefault><w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial"/><w:sz w:val="20"/><w:color w:val="333333"/></w:rPr></w:rPrDefault><w:pPrDefault><w:pPr><w:spacing w:after="80" w:line="220"/></w:pPr></w:pPrDefault></w:docDefaults><w-style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/></w-style><w:style w:type="paragraph" w:styleId="Heading1"><w:name w:val="heading 1"/><w:basedOn w:val="Normal"/><w:next w:val="Normal"/><w:uiPriority w:val="9"/><w:qFormat/><w:pPr><w:spacing w:before="160" w:after="60"/><w:keepNext/></w:pPr><w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial"/><w:b/><w:color w:val="51466D"/><w:sz w:val="22"/></w:rPr></w:style></w:styles>'.replace('<w-style','<w:style')}
+  function types(){return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/><Override PartName="/word/numbering.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.numbering+xml"/></Types>'}
+  function rels(){return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>'}
+  function docrels(){return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/numbering" Target="numbering.xml"/></Relationships>'}
+  function numbering(){return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:numbering xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:abstractNum w:abstractNumId="0"><w:multiLevelType w:val="singleLevel"/><w:lvl w:ilvl="0"><w:start w:val="1"/><w:numFmt w:val="bullet"/><w:lvlText w:val="•"/><w:lvlJc w:val="left"/></w:lvl></w:abstractNum><w:num w:numId="1"><w:abstractNumId w:val="0"/></w:num></w:numbering>'}
+  function body(mode){var pr=profile(),j=job(),out='';if(mode==='letter'){out+=p(pr.name);out+=p(pr.email);out+=p('September 16, 2026');out+=p('Dear Hiring Manager,');out+=p('I am excited to apply for the '+j.title+' position at '+j.company+'. '+(pr.summary||'My experience in operations, program delivery, and cross-functional leadership aligns well with this opportunity.'));out+=p('My relevant skills include '+(pr.skills||'process improvement, stakeholder management, analytics, and strategic execution')+'. I would welcome the opportunity to contribute to your team.');out+=p('Thank you for your consideration.');out+=p('Sincerely,');out+=p(pr.name);return out}out+=p(pr.name);out+=p(pr.email+' | Baltimore, MD | '+(pr.headline||'Executive Operations Leader'));out+=heading('EXECUTIVE SUMMARY');out+=p(pr.summary||'Operations leader with experience driving process improvement, cross-functional execution, analytics, and stakeholder outcomes.');out+=heading('CORE COMPETENCIES');textParts(pr.skills||'Product Operations, Program Management, Process Improvement, Stakeholder Management, Analytics',12).forEach(function(x){out+=bullet(x)});out+=heading('PROFESSIONAL EXPERIENCE');textParts(pr.experience||'Add accomplishment-focused experience in Edit profile.',8).forEach(function(x){out+=bullet(x)});out+=heading('TARGET ROLE');out+=p(j.title+' | '+j.company+' | '+j.location);return out}
+  function make(mode){var button=byId('generateDoc');if(button)button.textContent='Preparing clean DOCX…';if(!window.JSZip){alert('Please reload the page so the document generator can load.');return}var zip=new JSZip();zip.file('[Content_Types].xml',types());zip.folder('_rels').file('.rels',rels());var w=zip.folder('word');w.file('document.xml',docXml(body(mode)));w.file('styles.xml',styles());w.file('numbering.xml',numbering());w.folder('_rels').file('document.xml.rels',docrels());zip.generateAsync({type:'blob',mimeType:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'}).then(function(blob){var a=document.createElement('a'),j=job();a.href=URL.createObjectURL(blob);a.download=(mode==='letter'?'Cover Letter - ':'Tailored Resume - ')+String(j.company||'Job').replace(/[^a-z0-9]+/gi,'-')+'.docx';document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(a.href)},1000);if(button)button.textContent=mode==='letter'?'Downloaded cover letter DOCX':'Downloaded executive resume DOCX'}).catch(function(){if(button)button.textContent='Try again';alert('The document could not be generated. Please try again.')})}
+  document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#generateDoc');if(b){e.preventDefault();e.stopImmediatePropagation();make(window.ccDocMode||b.dataset.mode||'resume')}},true);
+})();
+</script>
+
+
+
+<script>
+(function(){
+'use strict';
+var KEY='cc_not_interested_matches';
+function data(){return Array.isArray(window.ccCandidates)?window.ccCandidates:[]}
+function hidden(){try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){return []}}
+function save(a){localStorage.setItem(KEY,JSON.stringify(a))}
+function token(c){return String(c.company||'')+'|'+String(c.title||'')+'|'+String(c.mode||'')}
+function removeCard(button){
+ var card=button.closest('.glass'); if(card)card.remove();
+ var index=Number(button.getAttribute('data-index')), c=data()[index]; if(c){var h=hidden(),t=token(c);if(h.indexOf(t)<0)h.push(t);save(h)}
+ var status=document.getElementById('jobSearchUpdated');if(status)status.textContent='Match removed · '+document.querySelectorAll('#matchCards .glass').length+' matches remaining';
+}
+function hideDismissed(){var h=hidden(),cards=document.querySelectorAll('#matchCards .glass');cards.forEach(function(card){var b=card.querySelector('.cc-not-interested,.not-interested');if(!b)return;var c=data()[Number(b.getAttribute('data-index')||b.getAttribute('data-match-index'))];if(c&&h.indexOf(token(c))>=0)card.remove()})}
+function bind(){var box=document.getElementById('matchCards');if(box){box.addEventListener('click',function(e){var b=e.target.closest('.cc-not-interested,.not-interested');if(b){e.preventDefault();e.stopPropagation();removeCard(b)}},true)}hideDismissed()}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind);else bind();
+var box=document.getElementById('matchCards');if(box&&window.MutationObserver)new MutationObserver(function(){hideDismissed()}).observe(box,{childList:true,subtree:true});
+})();
+</script>
+
+<script>
+(function(){
+  function refreshWishlist(){if(typeof updateWishlistReminder==='function'){try{updateWishlistReminder()}catch(e){}}}
+  document.addEventListener('click',function(){setTimeout(refreshWishlist,150)},true);
+  window.addEventListener('storage',refreshWishlist);
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',refreshWishlist);else refreshWishlist();
+})();
+</script>
+
+<script>
+(function(){
+  'use strict';
+  window.ccShortDate=function(d){return new Date(d).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})};
+  window.ccLongDate=function(d){return new Date(d).toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'})};
+  function updateHeader(){var el=document.getElementById('dashboardDate');if(el)el.textContent=window.ccLongDate(new Date())}
+  updateHeader();
+  setInterval(updateHeader,60000);
+})();
+</script>
+
+
+
+<script>
+(function(){
+'use strict';
+var refreshVersion=Number(localStorage.getItem('cc_match_refresh_version')||0);
+function id(x){return document.getElementById(x)}
+function allJobs(){return Array.isArray(window.ccCandidates)?window.ccCandidates:[]}
+function hidden(){try{return JSON.parse(localStorage.getItem('cc_not_interested_matches')||'[]')}catch(e){return []}}
+function token(c){return String(c.company||'')+'|'+String(c.title||'')+'|'+String(c.mode||'')}
+function visible(){var h=hidden();return allJobs().filter(function(c){return h.indexOf(token(c))<0})}
+function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function renderMatches(){
+ var box=id('matchCards');if(!box)return;
+ var items=visible();
+ box.innerHTML=items.map(function(c){var index=allJobs().indexOf(c);return '<article class="glass rounded-2xl border border-white shadow-soft p-5"><div class="flex items-start gap-3"><div class="w-11 h-11 rounded-xl bg-gradient-to-br from-indigo-50 to-emerald-50 flex items-center justify-center font-black text-lavender">'+esc((c.company||'?').charAt(0))+'</div><div class="flex-1"><div class="flex justify-between gap-3"><div><h3 class="font-black">'+esc(c.title)+'</h3><div class="text-sm text-slate-400 mt-1">'+esc(c.company)+' · '+esc(c.mode)+'</div></div><div class="text-right"><div class="text-2xl font-black text-lavender">'+esc(c.match)+'%</div><div class="text-[10px] text-slate-400">match</div></div></div><div class="flex gap-2 mt-3"><span class="pill bg-emerald-50 text-emerald-700">'+esc(c.salary)+'</span><span class="pill bg-slate-100 text-slate-600">'+esc(c.source)+'</span></div><p class="text-sm text-slate-500 leading-6 mt-4">'+esc(c.why)+'</p><div class="flex flex-wrap gap-3 mt-3"><a class="text-xs font-bold text-[#8f7ccc]" href="'+esc(c.applyUrl)+'" target="_blank" rel="noopener noreferrer">Open application ↗</a><a class="text-xs font-bold text-slate-500" href="'+esc(c.careersUrl)+'" target="_blank" rel="noopener noreferrer">Company careers ↗</a></div><div class="flex gap-2 mt-5"><button type="button" class="canonical-not-interested flex-1 border border-slate-200 rounded-xl py-2.5 text-sm font-bold" data-index="'+index+'">Not interested</button><button type="button" class="canonical-want-apply flex-1 bg-ink text-white rounded-xl py-2.5 text-sm font-bold" data-index="'+index+'">Want to apply</button></div></div></div></article>'}).join('')||'<div class="lg:col-span-2 rounded-2xl border border-dashed border-slate-200 bg-white/60 p-10 text-center text-slate-400">No new matches currently shown.</div>';
+ var u=id('jobSearchUpdated');if(u)u.textContent='Showing '+items.length+' active matches · refresh #'+refreshVersion;
+}
+function refresh(e){if(e){e.preventDefault();e.stopPropagation()}var b=id('searchJobs'),status=id('liveSourceStatus');if(b){b.disabled=true;b.textContent='Refreshing matches…'}if(status)status.textContent='Refreshing match list…';refreshVersion++;localStorage.setItem('cc_match_refresh_version',String(refreshVersion));renderMatches();setTimeout(function(){var now=new Date().toLocaleString('en-US',{month:'short',day:'numeric',year:'numeric',hour:'numeric',minute:'2-digit'});if(status)status.textContent='Refreshed '+now+' · '+visible().length+' matches';if(b){b.disabled=false;b.textContent='↻ Refresh search'}var u=id('jobSearchUpdated');if(u)u.textContent='Last refreshed '+now+' · '+visible().length+' active matches'},250)}
+function dismiss(index){var c=allJobs()[Number(index)];if(!c)return;var h=hidden(),k=token(c);if(h.indexOf(k)<0)h.push(k);localStorage.setItem('cc_not_interested_matches',JSON.stringify(h));renderMatches()}
+function apply(index){var c=allJobs()[Number(index)];if(!c)return;var a=typeof jobs!=='undefined'?jobs:JSON.parse(localStorage.getItem('cc_jobs')||'[]');a.unshift({company:c.company,title:c.title,location:c.mode,status:'Wishlist',match:c.match,updated:typeof ccShortDate==='function'?ccShortDate(new Date()):new Date().toLocaleDateString('en-US'),url:c.applyUrl,desc:c.why});localStorage.setItem('cc_jobs',JSON.stringify(a));if(typeof render==='function')render();alert('Added to your wishlist.')}
+function bind(){var b=id('searchJobs');if(b)b.onclick=function(e){refresh(e)};var box=id('matchCards');if(box)box.onclick=function(e){var n=e.target.closest('.canonical-not-interested'),w=e.target.closest('.canonical-want-apply');if(n){e.preventDefault();dismiss(n.getAttribute('data-index'))}else if(w){e.preventDefault();apply(w.getAttribute('data-index'))}};renderMatches()}
+window.ccForceRefresh=refresh;window.ccCanonicalRenderMatches=renderMatches;
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind);else bind();
+})();
+</script>
+
+<script>
+(function(){
+'use strict';
+var CONFIG_KEY='cc_supabase_config';
+var client=null;
+function id(x){return document.getElementById(x)}
+function setStatus(text,kind){var e=id('supabaseConnectionStatus');if(!e)return;e.textContent=text;e.className='pill '+(kind==='ok'?'bg-emerald-50 text-emerald-700':kind==='error'?'bg-rose-50 text-rose-700':'bg-slate-100 text-slate-600')}
+function config(){try{return JSON.parse(localStorage.getItem(CONFIG_KEY)||'null')}catch(e){return null}}
+function saveConfig(c){localStorage.setItem(CONFIG_KEY,JSON.stringify(c))}
+function validConfig(c){return c&&/^https:\/\/[^\s]+\.supabase\.co$/.test(c.url)&&c.key&&c.key.length>20}
+function currentUser(){return client?client.auth.getUser().then(function(r){if(r.error)throw r.error;return r.data.user}):Promise.resolve(null)}
+function fileSafe(name){return String(name||'resume').replace(/[^a-zA-Z0-9._-]/g,'-')}
+function cloudResumeStatus(text,ok){var e=id('resumeCloudStatus');if(e){e.textContent=text;e.className='mt-2 text-xs '+(ok?'text-emerald-700':'text-slate-400')}}
+async function connect(){var url=(id('supabaseProjectUrl')?.value||'').trim().replace(/\/$/,'');var key=(id('supabaseAnonKey')?.value||'').trim();if(!url||!key){setStatus('Enter both values','error');cloudResumeStatus('Paste the current Supabase Project URL and publishable/publishable key from Project Settings → API.',false);return}if(/^https?:\/\/localhost(?::\d+)?$/i.test(url)){setStatus('Use your Supabase URL','error');cloudResumeStatus('http://localhost:3000 is your dashboard address, not the Supabase project URL.',false);return}if(!/^https:\/\/[^\s]+\.supabase\.co$/i.test(url)){setStatus('Invalid Project URL','error');cloudResumeStatus('The Project URL should look like https://your-project-ref.supabase.co.',false);return}try{if(!window.supabase||!window.supabase.createClient)throw new Error('Supabase client library did not load.');client=window.supabase.createClient(url,key,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});window.ccSupabaseClient=client;var sessionResult=await client.auth.getSession();if(sessionResult.error)throw sessionResult.error;saveConfig({url:url,key:key});setStatus('Connected','ok');var session=sessionResult.data.session;updateAuthUi(session?.user||null);cloudResumeStatus(session?'Cloud resume storage connected.':'Project connected. Sign in below to upload resumes.',!!session);if(session)await loadCloudProfile(session.user.id)}catch(e){var msg=(e&&e.message)||'Unable to connect to Supabase.';setStatus(/api key|apikey|invalid/i.test(msg)?'Invalid API key':'Connection failed','error');cloudResumeStatus(/api key|apikey|invalid/i.test(msg)?'The key was rejected. Copy the current publishable key or anon key from Supabase Project Settings → API and paste it again. Do not use the service_role key.':msg,false)}}
+
+function updateAuthUi(user){var status=id('supabaseAuthStatus'),msg=id('supabaseAuthMessage');if(status){status.textContent=user?'Signed in':'Not signed in';status.className='pill '+(user?'bg-emerald-50 text-emerald-700':'bg-slate-100 text-slate-600')}if(msg)msg.textContent=user?'Signed in as '+(user.email||'your account'):'Connect the project, then sign in to enable private resume storage.'}
+async function signIn(){try{if(!client){await connect();if(!client)return}var email=(id('supabaseEmail')?.value||'').trim(),password=id('supabasePassword')?.value||'';if(!email||!password){id('supabaseAuthMessage').textContent='Enter your email and password.';return}var r=await client.auth.signInWithPassword({email:email,password:password});if(r.error)throw r.error;updateAuthUi(r.data.user);cloudResumeStatus('Cloud resume storage connected.',true);await loadCloudProfile(r.data.user.id)}catch(e){var msg=(e&&e.message)||'Authentication failed.';var m=id('supabaseAuthMessage');if(m)m.textContent=/api key|apikey|invalid/i.test(msg)?'Invalid API key. Re-copy the current publishable/anon key from Supabase Project Settings → API, paste it into the connection field, and click Connect first.':msg}}
+
+async function signUp(){try{if(!client)await connect();if(!client)return;var email=(id('supabaseEmail')?.value||'').trim(),password=id('supabasePassword')?.value||'';if(!email||password.length<6){id('supabaseAuthMessage').textContent='Enter an email and a password with at least 6 characters.';return}var r=await client.auth.signUp({email:email,password:password});if(r.error)throw r.error;id('supabaseAuthMessage').textContent=r.data.session?'Account created and signed in.':'Account created. Check your email to confirm, then sign in.';if(r.data.session)updateAuthUi(r.data.user)}catch(e){var m=id('supabaseAuthMessage');if(m)m.textContent=(e&&e.message)||'Account creation failed.'}}
+
+async function loadCloudProfile(uid){try{var r=await client.from('profiles').select('*').eq('id',uid).maybeSingle();if(r.error)throw r.error;if(r.data){localStorage.setItem('cc_profile',JSON.stringify({name:r.data.full_name||'Monchelle',email:r.data.email||'',headline:r.data.headline||'',summary:r.data.professional_summary||'',skills:r.data.skills||'',experience:r.data.experience||'',updated:new Date(r.data.updated_at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}));if(typeof renderResume==='function')renderResume()}}catch(e){console.warn('Profile load failed',e)}}
+async function uploadToCloud(file){if(!client)throw new Error('Connect Supabase first.');var u=await currentUser();if(!u)throw new Error('Please sign in to Supabase before uploading.');var path=u.id+'/'+Date.now()+'-'+fileSafe(file.name);var up=await client.storage.from('resumes').upload(path,file,{upsert:false,contentType:file.type||'application/octet-stream'});if(up.error)throw up.error;var old=await client.from('resume_files').update({is_current:false}).eq('user_id',u.id).eq('is_current',true);if(old.error)throw old.error;var rec=await client.from('resume_files').insert({user_id:u.id,file_name:file.name,storage_path:path,file_type:file.type,file_size_bytes:file.size,is_current:true}).select().single();if(rec.error)throw rec.error;return rec.data}
+async function handleCloudUpload(file){if(!file)return;var e=id('resumeStatus');try{if(!client){cloudResumeStatus('Connect Supabase before uploading; local mode remains available.',false);return}if(e)e.textContent='Uploading to Supabase…';var rec=await uploadToCloud(file);localStorage.setItem('cc_resume',JSON.stringify({name:rec.file_name,size:rec.file_size_bytes,type:rec.file_type,uploaded:new Date(rec.uploaded_at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),storage_path:rec.storage_path}));if(typeof renderResume==='function')renderResume();cloudResumeStatus('Uploaded securely to the private resumes bucket.',true)}catch(err){if(e)e.textContent='Upload failed: '+(err.message||'Please try again.');cloudResumeStatus('Check your Supabase sign-in, bucket name, and Storage policies.',false)}}
+async function saveProfileCloud(){if(!client)return null;var u=await currentUser();if(!u)throw new Error('Please sign in before saving to Supabase.');var p=JSON.parse(localStorage.getItem('cc_profile')||'{}');var r=await client.from('profiles').upsert({id:u.id,full_name:p.name||'Monchelle',email:p.email||null,headline:p.headline||null,professional_summary:p.summary||null,skills:p.skills||null,experience:p.experience||null,updated_at:new Date().toISOString()});if(r.error)throw r.error;return r}
+function wire(){var c=config();if(c){id('supabaseProjectUrl').value=c.url||'';id('supabaseAnonKey').value=c.key||'';if(/^https:\/\/[^\s]+\.supabase\.co$/i.test(c.url||''))connect()}var cb=id('connectSupabase');if(cb)cb.onclick=connect;var si=id('supabaseSignIn');if(si)si.onclick=signIn;var su=id('supabaseSignUp');if(su)su.onclick=signUp;if(client&&client.auth)client.auth.onAuthStateChange(function(event,session){updateAuthUi(session&&session.user);if(session&&session.user)loadCloudProfile(session.user.id)}) ;var upload=id('resumeUpload');if(upload)upload.addEventListener('change',function(e){var f=e.target.files&&e.target.files[0];if(f&&client)handleCloudUpload(f)});var save=id('saveProfile');if(save)save.addEventListener('click',function(){setTimeout(saveProfileCloud,700)});}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',wire);else wire();
+window.ccSupabaseUpload=handleCloudUpload;window.ccSupabaseSaveProfile=saveProfileCloud;
+})();
+</script>
+
+<script>
+(function(){
+  function openMasterResumeEditor(){
+    var modal=document.getElementById('profileModal');
+    if(!modal)return;
+    var data={};try{data=JSON.parse(localStorage.getItem('cc_profile')||'{}')}catch(e){}
+    [['profileName',data.name||'Monchelle'],['profileEmail',data.email||''],['profileHeadline',data.headline||''],['profileSummary',data.summary||''],['profileSkills',data.skills||''],['profileExperience',data.experience||'']].forEach(function(pair){var el=document.getElementById(pair[0]);if(el)el.value=pair[1]});
+    modal.classList.remove('hidden');modal.classList.add('flex');
+  }
+  function closeMasterResumeEditor(){var modal=document.getElementById('profileModal');if(modal){modal.classList.add('hidden');modal.classList.remove('flex')}}
+  function bindMasterResume(){
+    var edit=document.getElementById('editProfileBtn');if(edit)edit.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();openMasterResumeEditor()},true);
+    var close=document.getElementById('closeProfileModal');if(close)close.addEventListener('click',closeMasterResumeEditor,true);
+    var cancel=document.getElementById('cancelProfile');if(cancel)cancel.addEventListener('click',closeMasterResumeEditor,true);
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bindMasterResume);else bindMasterResume();
+})();
+</script>
+
+<script>
+(function(){
+'use strict';
+function val(id){var e=document.getElementById(id);return e?e.value.trim():''}
+function dateLabel(){return new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}
+function saveLocalProfile(){
+ var profile={name:val('profileName')||'Monchelle',email:val('profileEmail'),headline:val('profileHeadline'),summary:val('profileSummary'),skills:val('profileSkills'),experience:val('profileExperience'),updated:dateLabel()};
+ localStorage.setItem('cc_profile',JSON.stringify(profile));
+ var preview=document.getElementById('masterResumePreview');if(preview)preview.innerHTML='<b>'+escapeHtml(profile.headline||'Professional profile')+'</b><br>'+escapeHtml(profile.summary||'Add a professional summary in Edit profile.')+'<br><span class="text-xs text-slate-400">Skills: '+escapeHtml(profile.skills||'Add skills in Edit profile.')+'</span>';
+ var stamp=document.getElementById('masterResumeUpdated');if(stamp)stamp.textContent='Updated '+profile.updated+' · DOCX';
+ return profile;
+}
+function escapeHtml(v){return String(v||'').replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function bindSave(){
+ var b=document.getElementById('saveProfile');if(!b)return;
+ b.onclick=async function(e){e.preventDefault();e.stopImmediatePropagation();var profile=saveLocalProfile(),msg=document.getElementById('profileSaved');b.disabled=true;b.textContent='Saving…';if(msg)msg.textContent='Saving locally…';try{if(typeof window.ccSupabaseSaveProfile==='function'){var result=await window.ccSupabaseSaveProfile();if(result&&result.error)throw result.error;if(msg)msg.textContent='Master resume saved to Supabase.'}else if(msg)msg.textContent='Master resume saved locally.';b.textContent='Saved';setTimeout(function(){var modal=document.getElementById('profileModal');if(modal){modal.classList.add('hidden');modal.classList.remove('flex')}b.disabled=false;b.textContent='Save master resume'},900)}catch(err){if(msg)msg.textContent='Saved locally. Supabase save failed: '+(err.message||'check that you are signed in.');b.textContent='Saved locally';setTimeout(function(){b.disabled=false;b.textContent='Save master resume'},1200)}};
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bindSave);else bindSave();
+})();
+</script>
+
+<script>
+(function(){
+'use strict';
+var statusEl=function(){return document.getElementById('trackerSyncStatus')};
+function status(text,kind){var e=statusEl();if(e){e.textContent=text;e.className='pill '+(kind==='ok'?'bg-emerald-50 text-emerald-700':kind==='error'?'bg-rose-50 text-rose-700':'bg-slate-100 text-slate-600')}}
+function client(){return window.ccSupabaseClient||null}
+async function user(){var c=client();if(!c)return null;var r=await c.auth.getUser();if(r.error)throw r.error;return r.data.user}
+function mapRow(r){return {id:r.id,company:r.company_name||'',title:r.job_title||'',location:r.location||'',status:r.status||'Wishlist',match:r.match_score==null?0:Number(r.match_score),updated:r.last_status_update?new Date(r.last_status_update).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):new Date(r.updated_at||r.created_at||Date.now()).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),url:r.posting_url||'',desc:r.job_description||'',dateAdded:r.date_added||r.created_at,dbId:r.id}}
+function payload(j,u){return {user_id:u,company_name:j.company||'Untitled company',job_title:j.title||'Untitled role',job_description:j.desc||'',location:j.location||'',posting_url:j.url||null,status:j.status||'Wishlist',match_score:Number(j.match||0)||null}}
+async function loadApplications(){var c=client();if(!c){status('Local tracker mode');return}var u=await user();if(!u){status('Connected · sign in to sync tracker');return}status('Loading applications…');var r=await c.from('applications').select('*').eq('user_id',u.id).order('last_status_update',{ascending:false});if(r.error)throw r.error;var mapped=(r.data||[]).map(mapRow);window.ccReplaceTrackerJobs(mapped);status('Synced '+mapped.length+' applications from Supabase','ok');return mapped}
+async function saveApplication(j,existing){var c=client(),u=await user();if(!c||!u)throw new Error('Sign in to Supabase before saving applications.');var data=payload(j,u.id),r;if(existing&&existing.dbId){r=await c.from('applications').update(data).eq('id',existing.dbId).eq('user_id',u.id).select().single()}else{r=await c.from('applications').insert(data).select().single()}if(r.error)throw r.error;return mapRow(r.data)}
+async function removeApplication(j){var c=client(),u=await user();if(!c||!u)throw new Error('Sign in to Supabase before deleting applications.');if(!j.dbId)throw new Error('This local job has not been imported yet.');var r=await c.from('applications').delete().eq('id',j.dbId).eq('user_id',u.id).select('id');if(r.error)throw r.error;if(!r.data||r.data.length===0)throw new Error('Supabase did not delete this application. Check that the applications DELETE policy is enabled for your user.');return true}
+async function saveCurrentJob(){
+ var idx=window.ccEditingJobIndex;
+ if(idx===undefined||idx===null)idx=null;
+ var list=window.ccGetTrackerJobs?window.ccGetTrackerJobs():[];
+ var old=idx===null?null:list[idx];
+ var get=function(id,fallback){var e=document.getElementById(id);return e&&e.value.trim()?e.value.trim():fallback};
+ var j={company:get('fCompany','Untitled company'),title:get('fTitle','Untitled role'),location:get('fLocation','Location TBD'),status:(document.getElementById('fStatus')||{}).value||'Wishlist',url:get('fUrl','#'),desc:get('fDesc',''),match:old?Number(old.match||0):0,dbId:old?old.dbId:null};
+ var score=window.ccCalculateMatch?window.ccCalculateMatch(j):j.match;
+ j.match=score;
+ var b=document.getElementById('saveJobBtn');if(b){b.disabled=true;b.textContent='Saving…'}
+ try{
+   var saved=await saveApplication(j,old);
+   if(idx===null)list.unshift(saved);else list[idx]=saved;
+   window.ccReplaceTrackerJobs(list);
+   window.ccEditingJobIndex=null;
+   var modal=document.getElementById('jobModal');if(modal){modal.classList.add('hidden');modal.classList.remove('flex')}
+   var title=document.getElementById('jobModalTitle');if(title)title.textContent='Add a job';
+   var matchStatus=document.getElementById('matchStatus');if(matchStatus)matchStatus.innerHTML='<span class="text-emerald-700 font-bold">Saved with '+score+'% match.</span>';
+   if(typeof show==='function')show('tracker');
+   status('Saved to Supabase','ok');
+ }catch(e){status(e.message||'Unable to save application','error');alert(e.message||'Unable to save application')}
+ finally{if(b){b.disabled=false;b.textContent='Save job'}}
+}
+
+async function editDbJob(index){var list=window.ccGetTrackerJobs?window.ccGetTrackerJobs():[],j=list[index];if(!j)return;window.ccEditingJobIndex=index;document.getElementById('jobModalTitle').textContent='Edit job';document.getElementById('saveJobBtn').textContent='Save changes';document.getElementById('fCompany').value=j.company||'';document.getElementById('fTitle').value=j.title||'';document.getElementById('fLocation').value=j.location||'';document.getElementById('fStatus').value=j.status||'Wishlist';document.getElementById('fUrl').value=j.url||'';document.getElementById('fDesc').value=j.desc||'';openModal('jobModal')}
+async function deleteDbJob(index){var list=window.ccGetTrackerJobs?window.ccGetTrackerJobs():[],j=list[index];if(!j||!confirm('Delete '+(j.title||'this job')+' from your tracker?'))return;try{if(j.dbId)await removeApplication(j);else{status('This local job is not in Supabase yet. Import it before deleting from the cloud.','error');return}list.splice(index,1);window.ccReplaceTrackerJobs(list);status('Deleted from Supabase','ok')}catch(e){status(e.message||'Unable to delete application','error');alert(e.message||'Unable to delete application')}}
+async function importLocal(){var c=client(),u=await user(),local=window.ccGetTrackerJobs?window.ccGetTrackerJobs():[];if(!c||!u||!local.length)return;var r=await c.from('applications').select('id').eq('user_id',u.id);if(r.error)throw r.error;if(r.data&&r.data.length)return;var rows=local.map(function(j){return payload(j,u.id)});var ins=await c.from('applications').insert(rows).select();if(ins.error)throw ins.error;window.ccReplaceTrackerJobs((ins.data||[]).map(mapRow));status('Imported '+(ins.data||[]).length+' local applications to Supabase','ok')}
+function wire(){var sync=document.getElementById('syncTrackerBtn');if(sync)sync.onclick=function(e){e.preventDefault();loadApplications().catch(function(err){status(err.message||'Tracker sync failed','error')})};var save=document.getElementById('saveJobBtn');if(save)save.onclick=function(e){e.preventDefault();e.stopImmediatePropagation();saveCurrentJob()};document.addEventListener('click',function(e){var edit=e.target.closest&&e.target.closest('.edit-job'),del=e.target.closest&&e.target.closest('.delete-job');if(edit){e.preventDefault();e.stopImmediatePropagation();editDbJob(Number(edit.dataset.index))}else if(del){e.preventDefault();e.stopImmediatePropagation();deleteDbJob(Number(del.dataset.index))}},true);window.ccLoadApplications=loadApplications;window.ccSaveApplication=saveApplication;window.ccSyncTracker=loadApplications;var c=client();if(c)c.auth.onAuthStateChange(function(event,session){if(session)setTimeout(loadApplications,50)});if(c)setTimeout(async function(){try{var rows=await loadApplications();if(rows&&rows.length===0){var local=window.ccGetTrackerJobs?window.ccGetTrackerJobs():[];if(local.length&&confirm('Import your existing local tracker jobs into Supabase?'))await importLocal()}}catch(e){status(e.message||'Tracker sync failed','error')}},100)}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',wire);else wire();
+})();
+</script>
+
+<script>
+(function(){
+'use strict';
+function safeModal(id,open){var m=document.getElementById(id);if(!m)return false;if(open){m.classList.remove('hidden');m.classList.add('flex')}else{m.classList.add('hidden');m.classList.remove('flex')}return true}
+window.ccOpenModal=safeModal;
+window.addEventListener('error',function(e){if(e&&e.message&&e.message.indexOf("classList")>=0){var s=document.getElementById('trackerSyncStatus');if(s){s.textContent='Dashboard UI error: a page element was unavailable. Please refresh the page.';s.className='pill bg-rose-50 text-rose-700'}}});
+})();
+</script>
+
+<script>
+(function(){
+'use strict';
+function closeJobEditor(){
+  var modal=document.getElementById('jobModal');
+  if(modal){modal.classList.add('hidden');modal.classList.remove('flex')}
+  window.ccEditingJobIndex=null;
+  ['fCompany','fTitle','fLocation','fUrl','fDesc'].forEach(function(id){var e=document.getElementById(id);if(e)e.value=''});
+  var status=document.getElementById('fStatus');if(status)status.value='Wishlist';
+  var match=document.getElementById('matchStatus');if(match)match.textContent='';
+  var title=document.getElementById('jobModalTitle');if(title)title.textContent='Add a job';
+  var save=document.getElementById('saveJobBtn');if(save){save.textContent='Save job';save.disabled=false}
+}
+function bindCancel(){var b=document.getElementById('cancelJobBtn');if(b)b.onclick=function(e){e.preventDefault();e.stopImmediatePropagation();closeJobEditor()}}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bindCancel);else bindCancel();
+window.ccCloseJobEditor=closeJobEditor;
+})();
+</script>
+
+<script>
+(function(){
+'use strict';
+function calculate(j){
+ var profile={};try{profile=JSON.parse(localStorage.getItem('cc_profile')||'{}')}catch(e){}
+ var text=((j.title||'')+' '+(j.company||'')+' '+(j.desc||'')+' '+(profile.summary||'')+' '+(profile.skills||'')+' '+(profile.experience||'')).toLowerCase();
+ var terms=['operations','program','project','product','process','analytics','strategy','stakeholder','healthcare','leadership','implementation','data','management','improvement','roadmap','cross-functional','vendor','reporting','optimization','technology'];
+ var hits=terms.filter(function(t){return text.indexOf(t)>=0}).length;
+ var resume=localStorage.getItem('cc_resume')?10:0;
+ return Math.min(98,Math.max(35,Math.round(45+hits*2.5+resume)));
+}
+window.ccCalculateMatch=calculate;
+function compare(){var f=function(id){var e=document.getElementById(id);return e?e.value.trim():''};var score=calculate({title:f('fTitle'),company:f('fCompany'),desc:f('fDesc')});var out=document.getElementById('matchStatus');if(out)out.innerHTML='Resume comparison complete: <b class="text-[#8f7ccc]">'+score+'% match</b>'+(localStorage.getItem('cc_resume')?' · uploaded resume considered.':' · add a resume for a fuller comparison.');window.ccPendingMatch=score}
+function bind(){
+ var compareBtn=document.getElementById('compareMatchBtn');if(compareBtn)compareBtn.onclick=function(e){e.preventDefault();e.stopImmediatePropagation();compare()};
+ var saveBtn=document.getElementById('saveJobBtn');if(saveBtn)saveBtn.onclick=function(e){e.preventDefault();e.stopImmediatePropagation();if(typeof saveCurrentJob==='function')saveCurrentJob()};
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind);else bind();
+})();
+</script>
+
+<script>
+(function(){
+'use strict';
+async function deleteTrackerApplication(index){
+ var list=window.ccGetTrackerJobs?window.ccGetTrackerJobs():[],j=list[Number(index)];
+ if(!j)return;
+ if(!window.confirm('Delete '+(j.title||'this job')+' from your tracker?'))return;
+ var c=window.ccSupabaseClient;
+ try{
+   if(!c||!j.dbId)throw new Error('This application is not connected to a Supabase record yet.');
+   var auth=await c.auth.getUser();if(auth.error)throw auth.error;if(!auth.data.user)throw new Error('Please sign in before deleting applications.');
+   var result=await c.from('applications').delete().eq('id',j.dbId).eq('user_id',auth.data.user.id).select('id');
+   if(result.error)throw result.error;
+   if(!result.data||result.data.length===0)throw new Error('No database row was deleted. Check the applications DELETE policy in Supabase.');
+   list.splice(Number(index),1);if(window.ccReplaceTrackerJobs)window.ccReplaceTrackerJobs(list);
+   var st=document.getElementById('trackerSyncStatus');if(st){st.textContent='Deleted from Supabase';st.className='pill bg-emerald-50 text-emerald-700'}
+ }catch(e){var st2=document.getElementById('trackerSyncStatus');if(st2){st2.textContent=e.message||'Delete failed';st2.className='pill bg-rose-50 text-rose-700'}alert(e.message||'Unable to delete application')}
+}
+window.ccDeleteTrackerApplication=async function(index){await deleteTrackerApplication(index);return false};
+function bindDelete(){var box=document.getElementById('jobRows');if(!box)return;box.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('.tracker-delete');if(!b)return;e.preventDefault();e.stopImmediatePropagation();deleteTrackerApplication(Number(b.getAttribute('data-index')))},true)}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bindDelete);else bindDelete();
+})();
+</script>
+
+<script>
+(function(){
+'use strict';
+function get(id){return document.getElementById(id)}
+function text(id,fallback){var e=get(id);return e&&String(e.value||'').trim()?String(e.value).trim():fallback}
+function profileData(){try{return JSON.parse(localStorage.getItem('cc_profile')||'{}')}catch(e){return {}}}
+function calculateMatch(j){
+ var p=profileData();
+ var jobText=[j.title,j.company,j.desc].join(' ').toLowerCase();
+ var resumeText=[p.headline,p.summary,p.skills,p.experience].join(' ').toLowerCase();
+ var terms=['operations','program','project','product','process','analytics','strategy','stakeholder','healthcare','leadership','implementation','data','management','improvement','roadmap','cross-functional','vendor','reporting','optimization','technology','finance','customer','training','change'];
+ var hits=terms.filter(function(t){return jobText.indexOf(t)>=0&&resumeText.indexOf(t)>=0}).length;
+ var jobTerms=jobText.split(/[^a-z0-9-]+/).filter(function(x){return x.length>3});
+ var overlap=jobTerms.filter(function(t){return resumeText.indexOf(t)>=0}).length;
+ var score=45+hits*2+Math.min(15,overlap*2)+(localStorage.getItem('cc_resume')?10:0);
+ return Math.min(99,Math.max(50,Math.round(score)));
+}
+window.ccCalculateMatch=calculateMatch;
+async function saveTrackerJob(){
+ var list=window.ccGetTrackerJobs?window.ccGetTrackerJobs():[];
+ var raw=window.ccEditingJobIndex;
+ var idx=(raw===undefined||raw===null||raw==='')?null:Number(raw);
+ var old=idx===null?null:list[idx];
+ var job={company:text('fCompany','Untitled company'),title:text('fTitle','Untitled role'),location:text('fLocation','Location TBD'),status:(get('fStatus')||{}).value||'Wishlist',url:text('fUrl','#'),desc:text('fDesc',''),match:calculateMatch({company:text('fCompany',''),title:text('fTitle',''),desc:text('fDesc','')}),dbId:old&&old.dbId?old.dbId:null};
+ var b=get('saveJobBtn'), msg=get('matchStatus');
+ if(b){b.disabled=true;b.textContent='Saving changes…'}
+ if(msg)msg.innerHTML='<span class="text-[#8f7ccc] font-bold">Calculated match: '+job.match+'%</span>';
+ try{
+   if(typeof saveApplication!=='function')throw new Error('Application save service is not available. Reload the dashboard and try again.');
+   var saved=await saveApplication(job,old);
+   if(idx===null)list.unshift(saved);else list[idx]=saved;
+   if(window.ccReplaceTrackerJobs)window.ccReplaceTrackerJobs(list);
+   window.ccEditingJobIndex=null;
+   var modal=get('jobModal');if(modal){modal.classList.add('hidden');modal.classList.remove('flex')}
+   var title=get('jobModalTitle');if(title)title.textContent='Add a job';
+   if(msg)msg.innerHTML='<span class="text-emerald-700 font-bold">Saved with '+Number(saved.match||job.match)+'% match.</span>';
+   var st=get('trackerSyncStatus');if(st){st.textContent='Saved to Supabase · '+Number(saved.match||job.match)+'% match';st.className='pill bg-emerald-50 text-emerald-700'}
+   if(typeof show==='function')show('tracker');
+ }catch(e){var st2=get('trackerSyncStatus');if(st2){st2.textContent=e.message||'Save failed';st2.className='pill bg-rose-50 text-rose-700'}alert(e.message||'Unable to save application')}
+ finally{if(b){b.disabled=false;b.textContent='Save job'}}
+}
+window.ccSaveTrackerJob=saveTrackerJob;
+window.saveJob=saveTrackerJob;
+function bind(){var b=get('saveJobBtn');if(b){b.onclick=function(e){e.preventDefault();e.stopPropagation();saveTrackerJob()};b.setAttribute('onclick','window.ccSaveTrackerJob(); return false;')}}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind);else bind();
+})();
+</script>
+
+<script>
+(function(){
+'use strict';
+function el(id){return document.getElementById(id)}
+function value(id,fallback){var x=el(id);var v=x&&String(x.value||'').trim();return v||fallback}
+function closeTrackerModal(){var m=el('jobModal');if(m){m.classList.add('hidden');m.classList.remove('flex')}window.ccEditingJobIndex=null;['fCompany','fTitle','fLocation','fUrl','fDesc'].forEach(function(k){var x=el(k);if(x)x.value=''});var st=el('fStatus');if(st)st.value='Wishlist';var ms=el('matchStatus');if(ms)ms.textContent='';var t=el('jobModalTitle');if(t)t.textContent='Add a job';var b=el('saveJobBtn');if(b){b.disabled=false;b.textContent='Save job'}}
+function profile(){try{return JSON.parse(localStorage.getItem('cc_profile')||'{}')}catch(e){return {}}}
+function matchScore(j){var p=profile(),job=[j.title,j.company,j.desc].join(' ').toLowerCase(),res=[p.headline,p.summary,p.skills,p.experience].join(' ').toLowerCase();var terms=['operations','program','project','product','process','analytics','strategy','stakeholder','healthcare','leadership','implementation','data','management','improvement','roadmap','cross-functional','vendor','reporting','optimization','technology','finance','customer','training','change'];var hits=terms.filter(function(t){return job.indexOf(t)>=0&&res.indexOf(t)>=0}).length;var overlap=job.split(/[^a-z0-9-]+/).filter(function(t){return t.length>3&&res.indexOf(t)>=0}).length;return Math.min(99,Math.max(50,Math.round(45+hits*2+Math.min(15,overlap*2)+(localStorage.getItem('cc_resume')?10:0))))}
+async function directSave(){var list=window.ccGetTrackerJobs?window.ccGetTrackerJobs():[],raw=window.ccEditingJobIndex,idx=(raw===undefined||raw===null||raw==='')?null:Number(raw),old=idx===null?null:list[idx],job={company:value('fCompany','Untitled company'),title:value('fTitle','Untitled role'),location:value('fLocation','Location TBD'),status:(el('fStatus')||{}).value||'Wishlist',url:value('fUrl','#'),desc:value('fDesc','')},score=matchScore(job),button=el('saveJobBtn'),message=el('matchStatus');job.match=score;if(button){button.disabled=true;button.textContent='Saving…'}if(message)message.innerHTML='<span class="text-[#8f7ccc] font-bold">Calculated match: '+score+'%</span>';try{var c=window.ccSupabaseClient;if(!c)throw new Error('Connect Supabase first.');var auth=await c.auth.getUser();if(auth.error)throw auth.error;if(!auth.data.user)throw new Error('Please sign in before saving applications.');var payload={user_id:auth.data.user.id,company_name:job.company,job_title:job.title,job_description:job.desc,location:job.location,posting_url:job.url,status:job.status,match_score:score};var q=old&&old.dbId?c.from('applications').update(payload).eq('id',old.dbId).eq('user_id',auth.data.user.id).select().single():c.from('applications').insert(payload).select().single();var r=await q;if(r.error)throw r.error;var saved={id:r.data.id,dbId:r.data.id,company:r.data.company_name,title:r.data.job_title,location:r.data.location||'',status:r.data.status,match:Number(r.data.match_score||score),updated:r.data.last_status_update?new Date(r.data.last_status_update).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),url:r.data.posting_url||'',desc:r.data.job_description||''};if(idx===null)list.unshift(saved);else list[idx]=saved;if(window.ccReplaceTrackerJobs)window.ccReplaceTrackerJobs(list);if(message)message.innerHTML='<span class="text-emerald-700 font-bold">Saved with '+saved.match+'% match.</span>';var sync=el('trackerSyncStatus');if(sync){sync.textContent='Saved to Supabase · '+saved.match+'% match';sync.className='pill bg-emerald-50 text-emerald-700'}closeTrackerModal();if(typeof show==='function')show('tracker')}catch(e){var sync2=el('trackerSyncStatus');if(sync2){sync2.textContent=e.message||'Save failed';sync2.className='pill bg-rose-50 text-rose-700'}alert(e.message||'Unable to save application')}finally{if(button){button.disabled=false;button.textContent='Save job'}}}
+function bind(){window.ccCloseTrackerModal=closeTrackerModal;window.ccDirectSaveTrackerJob=directSave;var save=el('saveJobBtn');if(save){save.onclick=function(e){e.preventDefault();e.stopImmediatePropagation();directSave();return false};save.setAttribute('onclick','return window.ccDirectSaveTrackerJob ? window.ccDirectSaveTrackerJob() : false;')}var cancel=el('cancelJobBtn');if(cancel){cancel.onclick=function(e){e.preventDefault();e.stopImmediatePropagation();closeTrackerModal();return false};cancel.setAttribute('onclick','return window.ccCloseTrackerModal ? window.ccCloseTrackerModal() : false;')}var close=el('closeJobModalBtn');if(close){close.onclick=function(e){e.preventDefault();e.stopImmediatePropagation();closeTrackerModal();return false};close.setAttribute('onclick','return window.ccCloseTrackerModal ? window.ccCloseTrackerModal() : false;')}}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind);else bind();
+})();
+</script>
+
+<script>
+(function(){
+'use strict';
+var matches=[];
+function id(x){return document.getElementById(x)}
+function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function setStatus(text,kind){var e=id('matchDbStatus');if(e){e.textContent=text;e.className='text-xs '+(kind==='ok'?'text-emerald-700':kind==='error'?'text-rose-700':'text-slate-500')}}
+function client(){return window.ccSupabaseClient||null}
+async function currentUser(){var c=client();if(!c)return null;var r=await c.auth.getUser();if(r.error)throw r.error;return r.data.user}
+function updateBadge(count){var b=document.getElementById('jobMatchesBadge');if(b)b.textContent=String(count)+' available'}
+function sourceLabel(j){return j.source||'Supabase job source'}
+function renderDbMatches(){updateBadge(matches.length);var box=id('matchCards');if(!box)return;var cards=matches.map(function(m){var j=m.job,score=Math.round(Number(m.match_score||0));return '<article class="glass rounded-2xl border border-white shadow-soft p-5"><div class="flex items-start gap-3"><div class="w-11 h-11 rounded-xl bg-gradient-to-br from-indigo-50 to-emerald-50 flex items-center justify-center font-black text-lavender">'+esc((j.company_name||'?').charAt(0))+'</div><div class="flex-1"><div class="flex justify-between gap-3"><div><h3 class="font-black">'+esc(j.job_title)+'</h3><div class="text-sm text-slate-400 mt-1">'+esc(j.company_name)+' · '+esc(j.location||j.work_arrangement||'Location not specified')+'</div></div><div class="text-right"><div class="text-2xl font-black text-lavender">'+score+'%</div><div class="text-[10px] text-slate-400">match</div></div></div><div class="flex gap-2 mt-3"><span class="pill bg-emerald-50 text-emerald-700">'+esc(j.salary_text||((j.salary_min||j.salary_max)?'$'+(j.salary_min||'')+'–$'+(j.salary_max||''):'Salary not listed'))+'</span><span class="pill bg-slate-100 text-slate-600">'+esc(sourceLabel(j))+'</span></div><p class="text-sm text-slate-500 leading-6 mt-4">'+esc(m.match_explanation||j.job_description||'Matched to your saved profile and preferences.')+'</p><div class="flex flex-wrap gap-3 mt-3"><a class="text-xs font-bold text-[#8f7ccc]" href="'+esc(j.application_url||j.posting_url||'#')+'" target="_blank" rel="noopener noreferrer">Open application ↗</a><button type="button" class="db-wishlist text-xs font-bold text-emerald-700" data-job-id="'+esc(j.id)+'">Want to apply</button><button type="button" class="db-dismiss text-xs font-bold text-rose-600" data-job-id="'+esc(j.id)+'">Not interested</button></div></div></div></article>'});box.innerHTML=cards.join('')||'<div class="lg:col-span-2 rounded-2xl border border-dashed border-slate-200 bg-white/60 p-10 text-center text-slate-400">No database-backed matches are available yet.</div>'}
+async function loadDbMatches(){var c=client();if(!c){setStatus('Connect Supabase to load database-backed matches','error');renderDbMatches();return}var u=await currentUser();if(!u){setStatus('Sign in to load database-backed matches','error');renderDbMatches();return}setStatus('Loading matches from Supabase…');var mr=await c.from('job_matches').select('id,job_id,match_score,skills_score,experience_score,location_score,salary_score,match_explanation,calculated_at').eq('user_id',u.id).gte('match_score',50).order('match_score',{ascending:false});if(mr.error)throw mr.error;var ids=(mr.data||[]).map(function(x){return x.job_id});if(!ids.length){matches=[];renderDbMatches();setStatus('No matches yet. Add active jobs and match scores to Supabase.','ok');return}var jr=await c.from('jobs').select('*').in('id',ids).eq('is_active',true);if(jr.error)throw jr.error;var fr=await c.from('job_feedback').select('job_id,feedback_type').eq('user_id',u.id).in('job_id',ids);if(fr.error)throw fr.error;var dismissed=(fr.data||[]).filter(function(x){return x.feedback_type==='not_interested'}).map(function(x){return x.job_id});var jobsBy={};(jr.data||[]).forEach(function(j){jobsBy[j.id]=j});matches=(mr.data||[]).filter(function(m){return jobsBy[m.job_id]&&dismissed.indexOf(m.job_id)<0}).map(function(m){return {match_score:m.match_score,match_explanation:m.match_explanation,job:jobsBy[m.job_id]}});renderDbMatches();setStatus('Showing '+matches.length+' active database matches','ok');updateBadge(matches.length)}
+async function feedback(jobId,type){var c=client(),u=await currentUser();if(!c||!u)throw new Error('Sign in before saving job feedback.');var r=await c.from('job_feedback').upsert({user_id:u.id,job_id:jobId,feedback_type:type},{onConflict:'user_id,job_id,feedback_type'});if(r.error)throw r.error}
+async function wishlist(jobId){var c=client(),u=await currentUser();if(!c||!u)throw new Error('Sign in before adding a Wishlist job.');var item=matches.find(function(x){return x.job.id===jobId});if(!item)return;await feedback(jobId,'wishlist');var j=item.job;var r=await c.from('applications').insert({user_id:u.id,job_id:j.id,company_name:j.company_name,job_title:j.job_title,job_description:j.job_description||'',location:j.location||'',posting_url:j.application_url||j.posting_url||null,status:'Wishlist',match_score:Number(item.match_score||0)}).select().single();if(r.error&&r.error.code!=='23505')throw r.error;if(typeof window.ccLoadApplications==='function')await window.ccLoadApplications();await loadDbMatches();setStatus('Added '+j.job_title+' to your Wishlist','ok')}
+async function dismiss(jobId){await feedback(jobId,'not_interested');matches=matches.filter(function(x){return x.job.id!==jobId});renderDbMatches();setStatus('Match removed and saved as Not interested','ok')}
+function wireDb(){var refresh=id('searchJobs');if(refresh)refresh.addEventListener('click',function(e){e.preventDefault();loadDbMatches().catch(function(err){setStatus(err.message||'Unable to load matches','error')})},true);var box=id('matchCards');if(box)box.addEventListener('click',function(e){var w=e.target.closest&&e.target.closest('.db-wishlist'),d=e.target.closest&&e.target.closest('.db-dismiss');if(w){e.preventDefault();wishlist(w.dataset.jobId).catch(function(err){setStatus(err.message||'Unable to save Wishlist','error')})}if(d){e.preventDefault();dismiss(d.dataset.jobId).catch(function(err){setStatus(err.message||'Unable to save feedback','error')})}},true);window.ccLoadDbMatches=loadDbMatches;loadDbMatches().catch(function(err){setStatus(err.message||'Unable to load matches','error');renderDbMatches()})}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',wireDb);else wireDb();
+})();
+</script>
+
+<script>
+(function(){
+'use strict';
+function el(id){return document.getElementById(id)}
+function setRefreshStatus(text,kind){var e=el('matchDbStatus');if(e){e.textContent=text;e.className='text-xs '+(kind==='ok'?'text-emerald-700':kind==='error'?'text-rose-700':'text-slate-500')}}
+async function runRefresh(){
+ var b=el('searchJobs');
+ if(b){b.disabled=true;b.textContent='Refreshing…'}
+ setRefreshStatus('Refreshing matches from Supabase…');
+ try{
+   if(typeof window.ccLoadDbMatches!=='function')throw new Error('Database match loader is not available. Reload the dashboard.');
+   await window.ccLoadDbMatches();
+   setRefreshStatus('Matches refreshed from Supabase','ok');
+ }catch(err){setRefreshStatus(err&&err.message?err.message:'Unable to refresh matches','error')}
+ finally{if(b){b.disabled=false;b.textContent='↻ Refresh search'}}
+}
+function bind(){
+ var b=el('searchJobs');
+ if(b){b.onclick=function(e){e.preventDefault();e.stopImmediatePropagation();runRefresh();return false};b.removeAttribute('onclick');}
+ var nav=document.querySelectorAll('[data-view="matches"]');nav.forEach(function(n){n.addEventListener('click',function(){setTimeout(function(){if(typeof window.ccLoadDbMatches==='function')window.ccLoadDbMatches().catch(function(err){setRefreshStatus(err.message||'Unable to load matches','error')})},100)})});
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind);else bind();
+window.ccRunMatchRefresh=runRefresh;
+})();
+</script>
+
+<script>
+(function(){
+'use strict';
+function restoreDatabaseMatches(){if(typeof window.ccLoadDbMatches==='function'&&document.getElementById('matches')&&!document.getElementById('matches').classList.contains('hidden')){setTimeout(function(){window.ccLoadDbMatches().catch(function(){})},0)}}
+window.addEventListener('cc:wishlist-saved',restoreDatabaseMatches);
+})();
+</script>
+</body></html>
