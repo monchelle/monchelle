@@ -200,3 +200,130 @@ Career Command Center
 └── Supabase Edge Functions
     ├── Greenhouse Job Sync
     └── USAJOBS Job Sync
+
+```
+## Security Practices
+
+- Browser-safe Supabase keys are used on the client.
+- Service-role keys remain server-side in Supabase Edge Function secrets.
+- Resume files are stored in a private Supabase Storage bucket.
+- Row Level Security protects user-owned records.
+- API credentials are stored as Supabase secrets.
+- Sensitive credentials are excluded from GitHub source files.
+- External links use `noopener` and `noreferrer` where appropriate.
+- Database access is scoped to the authenticated user.
+- Profile, application, resume, feedback, and match records are protected by user-specific policies.
+- Server-side job synchronization functions do not expose private credentials to the browser.
+
+## Development Approach
+
+The project was developed incrementally through the following stages:
+
+1. Built the initial responsive dashboard interface.
+2. Added the application tracker.
+3. Implemented job creation, editing, deletion, and status management.
+4. Added resume upload functionality.
+5. Added master-resume profile editing.
+6. Added resume-to-job match scoring.
+7. Added tailored resume and cover-letter generation.
+8. Added downloadable DOCX document generation.
+9. Added Supabase authentication.
+10. Connected resume storage to Supabase Storage.
+11. Connected master-resume data to the Supabase `profiles` table.
+12. Connected the application tracker to the Supabase `applications` table.
+13. Added persistent Wishlist and Not Interested feedback.
+14. Connected the Job Matches page to `jobs`, `job_matches`, and `job_feedback`.
+15. Created Greenhouse job-source synchronization functions.
+16. Began USAJOBS API integration.
+17. Used staged Edge Function testing to isolate:
+    - Secret loading
+    - Authentication
+    - Database connectivity
+    - Greenhouse API access
+    - Job insertion
+    - Match insertion
+    - Full source synchronization
+
+The project emphasized incremental testing, defensive error handling, persistent database state, and a gradual transition from local browser storage to cloud-backed application data.
+
+## Future Improvements
+
+- Schedule job synchronization once or twice daily.
+- Add additional permitted job-source integrations.
+- Improve semantic resume-to-job matching.
+- Add feedback reasons for Not Interested selections.
+- Personalize ranking based on Wishlist and rejection behavior.
+- Add source-specific filtering and grouping.
+- Add salary and work-arrangement filters.
+- Add expired-posting detection and notifications.
+- Add alerts for newly discovered high-match jobs.
+- Add interview preparation tools.
+- Add application conversion analytics.
+- Add response-rate and pipeline analytics.
+- Add production hosting with a custom domain.
+- Add automated testing and regression coverage.
+- Add backend monitoring and synchronization-health reporting.
+- Add source-level retry and failure handling.
+- Add pagination and batching for high-volume job boards.
+- Add duplicate detection across multiple job sources.
+- Add user preference controls for industries, titles, locations, and salary ranges.
+- Add explanations showing why each job received its match score.
+
+## Project Status
+
+This project is an actively evolving personal career-technology application.
+
+The following capabilities are implemented:
+
+- Responsive career dashboard
+- Application tracking
+- Add, edit, and delete application functionality
+- Application status management
+- Dynamic tracker dates
+- Overview statistics and charts
+- Wishlist reminders
+- Resume upload interface
+- Private resume storage architecture
+- Editable master resume profile
+- Supabase authentication
+- Supabase PostgreSQL integration
+- Supabase Row Level Security
+- Supabase Storage integration
+- Database-backed applications
+- Database-backed job matches
+- Wishlist feedback persistence
+- Not Interested feedback persistence
+- Match-score persistence
+- Tailored resume generation
+- Customized cover-letter generation
+- DOCX document generation
+- Greenhouse job-source integration
+- USAJOBS integration preparation
+
+The job-source synchronization system is being developed incrementally. Greenhouse employer-board synchronization has been established as the first source, and USAJOBS integration is currently being added. Additional sources will be evaluated based on API availability, access permissions, reliability, and data quality.
+
+## Author
+
+Built by **Monchelle** as a practical application of:
+
+- Frontend development
+- Responsive dashboard design
+- JavaScript application logic
+- Backend integration
+- PostgreSQL database design
+- Supabase authentication
+- Supabase Storage
+- Row Level Security
+- REST API integration
+- Third-party job-source integration
+- Serverless Edge Functions
+- Data normalization
+- Job deduplication
+- Match-scoring logic
+- Resume and job-description analysis
+- DOCX document generation
+- Git and GitHub project management
+- Incremental debugging and integration testing
+- Career-technology automation
+
+This project demonstrates how a real-world personal productivity application can evolve from a front-end prototype into a cloud-connected, database-backed career platform.
