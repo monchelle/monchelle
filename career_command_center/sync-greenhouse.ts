@@ -77,8 +77,19 @@ async function fetchBoard(board: Board): Promise<GreenhouseJob[]> {
 Deno.serve(async (request) => {
   if (request.method !== "POST") return new Response("Use POST", { status: 405 });
   const started = new Date().toISOString();
-  const sync = await supabase.from("source_syncs").insert({ source: "greenhouse", started_at: started, status: "running" }).select().single();
-  if (sync.error) return Response.json({ error: sync.error.message }, { status: 500 });
+  const syncResult = await supabase
+    .from("source_syncs")
+    .insert({ source: "greenhouse", started_at: started, status: "running" })
+    .select("id")
+    .single();
+
+  if (!syncResult || syncResult.error || !syncResult.data?.id) {
+    const message = syncResult?.error?.message || "Unable to create source_syncs record.";
+    console.error("sync initialization failed", { message, data: syncResult?.data ?? null });
+    return Response.json({ error: message }, { status: 500 });
+  }
+
+  const syncId = syncResult.data.id;
 
   let found = 0, added = 0, updated = 0, deactivated = 0;
   try {
@@ -146,6 +157,6 @@ Deno.serve(async (request) => {
     return Response.json({ source: "greenhouse", found, added, updated, deactivated, completed_at: new Date().toISOString() });
   } catch (error) {
     await supabase.from("source_syncs").update({ completed_at: new Date().toISOString(), jobs_found: found, jobs_added: added, jobs_updated: updated, jobs_deactivated: deactivated, status: "failed", error_message: error instanceof Error ? error.message : String(error) }).eq("id", syncId);
-    return Response.json({ error: error instanceof Error ? error.message : String(error), found, added, updated, deactivated }, { status: 500 });
+    return Response.json({ error: message, found, added, updated, deactivated }, { status: 500 });
   }
 });
