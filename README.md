@@ -62,16 +62,17 @@ This repository showcases selected projects that combine data analysis, customer
   Selected Python scripts from my learning journey, focused on data manipulation, logic, and problem solving.  
   Folder: [`python-learning/`](./python-learning)
 
-
 - **SQL Learning & Practice**  
   Selected SQL scripts from my learning journey, focused on data manipulation, logic, and problem solving.  
-  Folder: [`sql-learning/`](./sql-learning)
-  
+  Folder: [`sql-learning/`](./sql-learning)  
 
 - **Tata Data Visualization: Empowering Business with Effective Insights**   
   Delivered insights and a presentation script for CEO/CMO decision‑making.  
   Folder: [`tata-data-visualization/`](./tata-data-visualization)
-
+  
+- **Graduate School Learning Plan**   
+  A structured graduate roadmap outlining my machine learning, analytics, and optimization coursework with milestone‑based portfolio development.  
+  Folder: [`learning-plan/`](./learning-plan)
 
 
 
