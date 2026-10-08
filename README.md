@@ -7,7 +7,7 @@
 - ⚡ Fun fact: as a child, I used to participate in beauty pageants.
 
 Some of my experience includes:
-- Team Leader, B2B Operations - 5 years
+- Team Leader, B2B Operations - 6 years
 - Project Consultant - 5 years
 - Customer Service Representative - 10 years
 
