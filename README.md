@@ -49,6 +49,10 @@ This repository showcases selected projects that combine data analysis, customer
 - **Environmental Impact Analysis**   
   Utilized Python and Tableau to follow the six steps of data preparation and create visualization for public use.  
   Folder: [`environmental-impact-analysis/`](./environmental-impact-analysis)
+
+- **Retail Call Center CSAT Analysis**  
+  Data‑driven customer experience study linking sentiment, quality, and leadership behaviors to achieve the FY27 trust‑led performance goal.  
+  Folder: [`call-center-csat-forum/`](./call-center-csat-forum)
   
 - **B2B Happy Customer Score (HCS) Dashboard**  
   Weekly CX performance dashboards for B2B Sales & Service inbound queues, with coaching insights for team leaders.  
@@ -58,14 +62,6 @@ This repository showcases selected projects that combine data analysis, customer
   End-to-end analysis of promotional performance, including lift calculations, correlation analysis, and test design recommendations.  
   Folder: [`greentrail-promo-analysis/`](./greentrail-promo-analysis)
 
-- **Python Learning & Practice**  
-  Selected Python scripts from my learning journey, focused on data manipulation, logic, and problem solving.  
-  Folder: [`python-learning/`](./python-learning)
-
-- **SQL Learning & Practice**  
-  Selected SQL scripts from my learning journey, focused on data manipulation, logic, and problem solving.  
-  Folder: [`sql-learning/`](./sql-learning)  
-
 - **Tata Data Visualization: Empowering Business with Effective Insights**   
   Delivered insights and a presentation script for CEO/CMO decision‑making.  
   Folder: [`tata-data-visualization/`](./tata-data-visualization)
@@ -74,6 +70,13 @@ This repository showcases selected projects that combine data analysis, customer
   A structured graduate roadmap outlining my machine learning, analytics, and optimization coursework with milestone‑based portfolio development.  
   Folder: [`learning-plan/`](./learning-plan)
 
+- **Python Learning & Practice**  
+  Selected Python scripts from my learning journey, focused on data manipulation, logic, and problem solving.  
+  Folder: [`python-learning/`](./python-learning)
+
+- **SQL Learning & Practice**  
+  Selected SQL scripts from my learning journey, focused on data manipulation, logic, and problem solving.  
+  Folder: [`sql-learning/`](./sql-learning)  
 
 
 <!---
